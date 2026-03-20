@@ -1,0 +1,127 @@
+
+    <div class="courses-panel">
+        <div class="header">
+          <h2 class="title">Αξιολόγηση προμηθευτών</h2>        
+        </div>
+        <div class="header">
+            <button mat-button (click)="accordion.openAll()">Άνοιγμα όλων των καρτελών</button>
+            <button mat-button (click)="accordion.closeAll()">Κλείσιμο όλων των καρτελών</button>
+        </div>
+         
+      <mat-accordion class="example-headers-align" multi>
+        <mat-expansion-panel *ngFor="let supplier of suppliers" >
+          <mat-expansion-panel-header>
+            <mat-panel-title>
+              {{ supplier.name }}
+            </mat-panel-title>
+            <mat-panel-description>
+              {{ supplier.type }}
+            </mat-panel-description>
+          </mat-expansion-panel-header>
+          <span style="margin-left: 120px;"></span> 
+            <mat-grid-list cols="2">
+                <mat-list-item>
+                    <h3 matLine>Προμηθευτής: {{supplier.name}}</h3>
+                </mat-list-item>
+                <mat-list-item>
+                    <h3 matLine>Προμηθευόμενο είδος: {{supplier.type}}</h3>
+               </mat-list-item>
+               <mat-list-item>
+                <h3>Τελευταία ημερομηνία αξιολόγησης: {{supplier.previousEvaluationDate}}</h3>
+           </mat-list-item>
+            </mat-grid-list>
+
+            <div class="header">
+              <h2 class="title">Φόρμα αξιολόγησης προμηθευτή</h2>        
+            </div>
+
+            <mat-form-field appearance="outline" >
+              <mat-label>Ημερομηνία αξιολόγησης</mat-label>
+              <input matInput [matDatepicker]="promoStartPicker" [max]="maxDate"  (dateInput)="setEvaluationDate($event, supplier)" readonly>
+              <mat-datepicker-toggle matSuffix [for]="promoStartPicker"></mat-datepicker-toggle>
+              <mat-datepicker #promoStartPicker></mat-datepicker>
+            </mat-form-field>
+            
+            <!-- Κριτήρια (Βαθμολογία 1-5) -->
+            <table mat-table [dataSource]="supplier.criteriaEvaluation">
+                Κριτήρια (Βαθμολογία 1-5)
+                <ng-container matColumnDef="name">
+                  <th mat-header-cell *matHeaderCellDef><b> Κριτήρια (Βαθμολογία 0-5)</b> </th>
+                  <td mat-cell *matCellDef="let element"> {{element.name}} </td>
+                </ng-container>
+              
+                <ng-container matColumnDef="score" >
+                  <th mat-header-cell *matHeaderCellDef><b> Βαθμολογία (1-5)</b> </th>
+                  <td mat-cell *matCellDef="let element">
+                    <mat-select (selectionChange)="onSelectionScore($event, element, supplier)" value="{{element.score}}">
+                      <mat-option *ngFor="let option of dropdownOptions" [value]="option.value"   
+                      >{{option.score}}</mat-option>
+                    </mat-select>
+                  </td>
+                </ng-container>
+              
+                <ng-container matColumnDef="percentage">
+                  <th mat-header-cell *matHeaderCellDef><b> Σ.Β.</b> </th>
+                  <td mat-cell *matCellDef="let element"> {{element.percentage}} </td>
+                </ng-container>
+              
+                <ng-container matColumnDef="finalScore">
+                  <th mat-header-cell *matHeaderCellDef><b> ΑΠ.</b> </th>
+                  <td mat-cell *matCellDef="let element"> {{element.finalScore}} </td>                  
+                </ng-container>
+              
+                <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+            </table>
+
+            <br>
+            <div style="text-align: right;">
+            <mat-form-field >
+                <mat-label>Συνολική Βαθμολογία</mat-label>
+                <input matInput [(ngModel)]="supplier.totalScore"  readonly/>
+              </mat-form-field>
+            </div> 
+
+            <mat-form-field class="example-full-width">
+                <mat-label>Παρατηρήσεις –Σχόλια</mat-label>
+                <textarea matInput placeholder="Σχόλια..."  [(ngModel)]="supplier.comments"></textarea>
+              </mat-form-field>
+
+              <br>
+
+               <!-- ΣΥΝΟΛΙΚΗ ΒΑΘΜΟΛΟΓΙΑ -->
+            <table mat-table [dataSource]="dataRoolsSource">
+                ΣΥΝΟΛΙΚΗ ΒΑΘΜΟΛΟΓΙΑ
+                <ng-container matColumnDef="column_1">
+                  <th mat-header-cell *matHeaderCellDef><b> ΣΥΝΟΛΙΚΗ ΒΑΘΜΟΛΟΓΙΑ</b> </th>
+                  <td mat-cell *matCellDef="let element"> {{element.column_1}} </td>
+                </ng-container>
+              
+                <ng-container matColumnDef="column_2">
+                  <th mat-header-cell *matHeaderCellDef><b> ΚΑΤΗΓΟΡΙΑ </b> </th>
+                  <td mat-cell *matCellDef="let element"> {{element.column_2}} </td>
+                </ng-container>
+              
+                <ng-container matColumnDef="column_3">
+                  <th mat-header-cell *matHeaderCellDef><b> ΣΧΟΛΙΑ </b> </th>
+                  <td mat-cell *matCellDef="let element"> {{element.column_3}} </td>
+                </ng-container>
+              
+                <tr mat-header-row *matHeaderRowDef="displayedRoolsColumns"></tr>
+                <tr mat-row *matRowDef="let row; columns: displayedRoolsColumns;"></tr>
+            </table>
+            
+            <br>
+            
+              <div class="center-container">
+                <button mat-raised-button color="primary" 
+                        (click)="onSave(supplier)">
+                    Save
+                  </button> 
+                </div>
+          
+        </mat-expansion-panel>
+      </mat-accordion>
+      </div>
+
+      

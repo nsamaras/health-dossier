@@ -1,0 +1,36 @@
+<div class="create-course">
+    <h3>Δημιουργία προφίλ θερμοκρασιών</h3>
+
+    <form [formGroup]="form">
+
+      <mat-form-field appearance="outline">
+        <input placeholder="Όνομα" matInput formControlName="name">
+      </mat-form-field>
+     
+      <mat-form-field appearance="outline">
+        <mat-select placeholder="Συντήρηση/Κατάψυξη" formControlName="category">
+          <mat-option value="FRIDGES">Συντήρηση</mat-option>
+          <mat-option value="FREEZERS">Κατάψυξη</mat-option>
+          <mat-option value="HOTS">Διατήρηση εν θερμώ</mat-option>
+          <mat-option value="COOKED">Μαγειρεμένα</mat-option>
+        </mat-select>
+      </mat-form-field>       
+      
+      <!-- <mat-form-field appearance="outline">
+        <mat-label>Ημερομηνία</mat-label>
+        <input matInput [matDatepicker]="promoStartPicker" [max]="maxDate" formControlName="date">
+        <mat-datepicker-toggle matSuffix [for]="promoStartPicker"></mat-datepicker-toggle>
+        <mat-datepicker #promoStartPicker></mat-datepicker>
+      </mat-form-field> -->
+
+      <mat-dialog-actions>
+        <button mat-raised-button (click)="close()">
+          Close
+      </button>
+        <button mat-raised-button color="warn" [disabled]="!form.valid"
+                        (click)="saveCategory()">
+        Προσθήκη
+      </button>
+    </mat-dialog-actions>
+    </form>
+  </div>  

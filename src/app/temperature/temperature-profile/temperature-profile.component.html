@@ -1,0 +1,157 @@
+<div class="courses-panel">
+
+    <div class="header">
+        <h2 class="title">Δημιουργία προφίλ θερμοκρασιών</h2>        
+    </div>
+  
+   
+    <button mat-mini-fab color="warn" (click)="addTemperature()">
+      <mat-icon class="add-course-btn">add</mat-icon>
+   </button>
+  
+   <br>
+    
+   <br>
+    <!-- Συντήρηση -->
+   <mat-tab-group mat-align-tabs="center">
+    <mat-tab label="Συντήρηση" >
+              <form #myform = "ngForm" >
+                <table mat-table [dataSource]="fridgeData" >
+                  <ng-container matColumnDef="name">
+                    <th *matHeaderCellDef> Όνομα </th>
+                    <td mat-cell *matCellDef="let element ; let i = index;"> 
+                      <mat-form-field  appearance="fill">
+                        <mat-label> Ονομα</mat-label>
+                        <input matInput type="text" 
+                                    name="name{{i}}"
+                                    [(ngModel)]="element.name" >
+                      </mat-form-field>
+                    </td>
+                  </ng-container>
+                
+                  <ng-container matColumnDef="delete">
+                    <th *matHeaderCellDef> Διαγραφή </th>       
+                    <td mat-cell *matCellDef="let element ; let i = index;">          
+                      <button mat-mini-fab color="warn" aria-label="Example icon button with a delete icon" (click)="onDeleteFridge(i)">
+                        <mat-icon>delete</mat-icon>
+                      </button>
+                    </td>       
+                  </ng-container>
+                  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                  <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+                </table>
+                <br>
+                <button mat-raised-button color="primary" (click)="onSaveFridgeData()">
+                  Save
+                </button>
+            </form>
+        </mat-tab>
+
+       <!-- Κατάψυξη -->
+       <mat-tab label="Κατάψυξη">
+        <form #myform = "ngForm">
+        <table mat-table [dataSource]="freezerData">
+            <ng-container matColumnDef="name">
+                <th *matHeaderCellDef> Όνομα </th>
+                <td mat-cell *matCellDef="let element ; let i = index;"> 
+                  <mat-form-field appearance="fill">
+                    <mat-label> Ονομα</mat-label>
+                    <input matInput type="text" 
+                                name="name{{i}}"
+                                [(ngModel)]="element.name" >
+                  </mat-form-field>
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="delete">
+                <th *matHeaderCellDef> Διαγραφή </th>       
+                <td mat-cell *matCellDef="let element ; let i = index;">          
+                  <button mat-mini-fab color="warn" aria-label="Example icon button with a delete icon" (click)="onDeleteFreezer(i)">
+                    <mat-icon>delete</mat-icon>
+                  </button>
+                </td>       
+              </ng-container>
+          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+        </table>
+        <br>
+        <button mat-raised-button color="primary" (click)="onSaveFreezerData()">
+          Save
+        </button>
+      </form>
+      </mat-tab>
+
+       <!-- Διατήρηση εν θερμώ -->
+       <mat-tab label="Διατήρηση εν θερμώ">
+        <form #myform = "ngForm">
+        <table mat-table [dataSource]="hotsData">
+            <ng-container matColumnDef="name">
+                <th *matHeaderCellDef> Όνομα </th>
+                <td mat-cell *matCellDef="let element ; let i = index;"> 
+                  <mat-form-field appearance="fill">
+                    <mat-label> Ονομα</mat-label>
+                    <input matInput type="text" 
+                                name="name{{i}}"
+                                [(ngModel)]="element.name" >
+                  </mat-form-field>
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="delete">
+                <th *matHeaderCellDef> Διαγραφή </th>       
+                <td mat-cell *matCellDef="let element ; let i = index;">          
+                  <button mat-mini-fab color="warn" aria-label="Example icon button with a delete icon" (click)="onDeleteHot(i)">
+                    <mat-icon>delete</mat-icon>
+                  </button>
+                </td>       
+              </ng-container>
+          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+        </table>
+        <br>
+        <button mat-raised-button color="primary" (click)="onSaveHotData()">
+          Save
+        </button>
+      </form>
+      </mat-tab>
+
+      <!-- Μαγειρεμένα -->
+      <mat-tab label="Μαγειρεμένα">
+        <form #myform = "ngForm">
+        <table mat-table [dataSource]="cookData">
+            <ng-container matColumnDef="name">
+                <th *matHeaderCellDef> Όνομα </th>
+                <td mat-cell *matCellDef="let element ; let i = index;"> 
+                  <mat-form-field appearance="fill">
+                    <mat-label> Ονομα</mat-label>
+                    <input matInput type="text" 
+                                name="name{{i}}"
+                                [(ngModel)]="element.name" >
+                  </mat-form-field>
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="delete">
+                <th *matHeaderCellDef> Διαγραφή </th>       
+                <td mat-cell *matCellDef="let element ; let i = index;">          
+                  <button mat-mini-fab color="warn" aria-label="Example icon button with a delete icon" (click)="onDeleteCook(i)">
+                    <mat-icon>delete</mat-icon>
+                  </button>
+                </td>       
+              </ng-container>
+          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+        </table>
+        <br>
+        <button mat-raised-button color="primary" (click)="onSaveCookData()">
+          Save
+        </button>
+      </form>
+      </mat-tab>
+
+      
+  </mat-tab-group>
+
+      
+  </div>  
+  

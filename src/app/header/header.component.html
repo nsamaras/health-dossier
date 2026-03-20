@@ -1,0 +1,86 @@
+<mat-sidenav-container fullscreen>
+  <mat-sidenav #start (click)="start.close()">
+    <mat-nav-list>
+      <a mat-list-item routerLink="/home">
+        <mat-icon>question_answer</mat-icon>
+        <span>Αρχική Σελίδα</span>
+      </a>
+
+      <a mat-list-item routerLink="/admin-dashboard" *ngIf="(user.isLoggedIn$ | async) && user.isActiveUser  && user.isAdminUser" routerLinkActive="router-link-active">
+        <mat-icon>library_books</mat-icon>
+        <span>Admin dashboard</span>
+      </a>
+
+      <a mat-list-item routerLink="/business-files" *ngIf="(user.isLoggedIn$ | async) && user.isActiveUser" routerLinkActive="router-link-active">
+        <mat-icon>library_books</mat-icon>
+        <span>Αρχεία επιχείρησης</span>
+      </a>
+
+      <a mat-list-item routerLink="/staff-files" *ngIf="(user.isLoggedIn$ | async) && user.isActiveUser" routerLinkActive="router-link-active">
+        <mat-icon>library_books</mat-icon>
+        <span>Αρχεία προσωπικού</span>
+      </a>
+
+      <a mat-list-item routerLink="/water-files" *ngIf="(user.isLoggedIn$ | async) && user.isActiveUser" routerLinkActive="router-link-active">
+        <mat-icon>library_books</mat-icon>
+        <span>Αρχεία νερού</span>
+      </a>
+
+      <a mat-list-item routerLink="/disinsect-files" *ngIf="(user.isLoggedIn$ | async) && user.isActiveUser" routerLinkActive="router-link-active">
+        <mat-icon>library_books</mat-icon>
+        <span>Αρχεία απεντομώσεων και μυοκτονιών</span>
+      </a>
+
+      <a mat-list-item routerLink="/supplier-files" *ngIf="(user.isLoggedIn$ | async) && user.isActiveUser" routerLinkActive="router-link-active">
+        <mat-icon>library_books</mat-icon>
+        <span>Αρχεία προμηθευτών</span>
+      </a>
+
+      <a mat-list-item routerLink="/allergenic" *ngIf="(user.isLoggedIn$ | async) && user.isActiveUser" routerLinkActive="router-link-active">
+        <mat-icon>library_books</mat-icon>
+        <span>Aλλεργιογόνα</span>
+      </a>
+
+      <!-- <a mat-list-item routerLink="/temperatures-profile" *ngIf="(user.isLoggedIn$ | async) && user.isActiveUser" routerLinkActive="router-link-active">
+        <mat-icon>add_circle_outline</mat-icon>
+        <span>Δημιουργία προφίλ θερμοκρασιών</span>
+      </a> -->
+
+      <a mat-list-item routerLink="/temperatures" *ngIf="(user.isLoggedIn$ | async) && user.isActiveUser" routerLinkActive="router-link-active">
+        <mat-icon>library_books</mat-icon>
+        <span>Αρχείο παρακολούθησης θερμοκρασιών</span>
+      </a>
+
+      <a mat-list-item routerLink="/cleaning-disinfection" *ngIf="(user.isLoggedIn$ | async) && user.isActiveUser" routerLinkActive="router-link-active">
+        <mat-icon>library_books</mat-icon>
+        <span>Έλεγχος καθαρισμού</span>
+      </a>
+
+      <a mat-list-item routerLink="/auth" *ngIf="user.isLoggedOut$ | async">
+        <mat-icon>account_circle</mat-icon>
+        <span>Login</span>
+      </a>
+
+      <a mat-list-item routerLink="/auth" *ngIf="user.isLoggedIn$ | async" (click)="onLogout()">
+        <mat-icon>exit_to_app</mat-icon>
+        <span>Logout</span>
+      </a>
+    </mat-nav-list>
+  </mat-sidenav>
+
+  <mat-toolbar class="custom-toolbar">
+    <div class="toolbar-tools">
+      <button mat-icon-button (click)="start.open('mouse')">
+        <mat-icon>menu</mat-icon>
+      </button>
+      <div class="filler"></div>
+      <ng-container *ngIf="(user.isLoggedIn$ | async) && user.isActiveUser " >
+          <button mat-button class="user-avatar" (click)="editUser()">
+            <mat-icon>account_circle</mat-icon>
+            <span> {{user.loginMessage}} </span>
+        </button>
+      </ng-container>
+    </div>
+  </mat-toolbar>
+  <router-outlet></router-outlet>
+</mat-sidenav-container>

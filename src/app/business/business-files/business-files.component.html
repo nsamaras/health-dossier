@@ -1,0 +1,22 @@
+<div class="courses-panel">
+    <div class="header">
+        <h2 class="title">Αρχεία επιχείρησης</h2>        
+    </div>
+    <div class="centered-content">
+        <p>
+          {{ descriptionText }}
+        </p>
+
+        <ul class="custom-bullets">
+            <li *ngFor="let item of items">
+                {{ item }}
+            </li>
+          </ul>
+      
+    <mat-tab-group (selectedTabChange)="tabChanged($event)" mat-align-tabs="center">
+        <mat-tab *ngFor="let menuEl of menu" label="{{ menuEl.title }}" >
+        </mat-tab>        
+      </mat-tab-group>
+    </div>
+</div> 
+

@@ -1,0 +1,30 @@
+<div class="create-course">
+    <h2 class="title">Προσθήκη προμηθευτή</h2> 
+    <form [formGroup]="form">
+
+      <mat-form-field appearance="outline">
+        <input placeholder="Όνομα προμηθευτή" matInput formControlName="name">
+      </mat-form-field>
+     
+      <section class="example-section">
+        <div *ngFor="let type of suppliersTypes; let i = index">         
+          <mat-checkbox class="example-margin"  [value]="type.description" (change)="onCheckChange($event, type)"> {{ type.description }}</mat-checkbox>
+        </div>        
+      </section>
+     
+      <mat-form-field appearance="outline">
+        <input placeholder="Είδος προμηθευτή" matInput formControlName="extraSuplierType" class="example-full-width" >
+      </mat-form-field>
+  
+      <mat-dialog-actions>
+        <button mat-raised-button (click)="close()">
+          Close
+      </button>
+      
+        <button mat-raised-button color="warn" [disabled]="!form.valid"
+                        (click)="saveSupplier()">
+        Προσθήκη
+      </button>
+    </mat-dialog-actions>
+    </form>
+  </div>  

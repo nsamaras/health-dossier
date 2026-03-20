@@ -1,0 +1,50 @@
+
+:host {
+    display: flex;
+    justify-content: center;
+}
+
+.file-upload {
+    margin-top: 20px;
+}
+
+.file-thumbnail {
+  max-width: 200px;
+  margin-bottom: 10px;
+  border-radius: 4px;
+}
+
+.file-upload form {
+    display: flex;
+    flex-direction: column;
+}
+
+.file-image-upload {
+  margin: 0 0 20px 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.promo {
+  margin-bottom: 20px;
+}
+
+.file-image-upload span {
+  margin-bottom:10px;
+}
+
+.upload-progress {
+  display: flex;
+  margin: 10px;
+  max-width: 250px;
+}
+
+.progress-bar {
+  margin: 10px;
+  width: 300px;
+}
+
+.uploaded-image {
+  max-width: 250px;
+}
+

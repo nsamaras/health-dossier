@@ -1,0 +1,57 @@
+# Angular build output
+/dist
+/tmp
+/out-tsc
+
+# Firebase cache and build files
+.firebase/
+.firebaserc
+firebase-debug.log
+firebase-debug.*.log
+
+# Functions (if using Firebase Functions)
+functions/node_modules/
+functions/lib/
+functions/.env
+functions/.env.*   # environment-specific
+functions/scripts/*.json
+*.env.local
+*.local
+
+# Node.js dependencies
+/node_modules/
+
+# IDEs and editors
+.idea/
+.vscode/
+
+# Build cache
+/.angular
+/.angular/cache
+/.angular/config.json
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Operating System files
+.DS_Store
+Thumbs.db
+
+# Coverage reports
+/coverage
+/karma-coverage/
+
+# TypeScript
+*.tsbuildinfo
+
+# Miscellaneous
+.sass-cache/
+connect.lock
+libpeerconnection.log
+
+# Environment files (optional: uncomment if you want to keep them local)
+/src/environments/environment.ts
+/src/environments/environment.prod.ts

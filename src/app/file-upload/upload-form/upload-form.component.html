@@ -1,0 +1,27 @@
+<div class="file-upload">
+    <form>
+      <div class="file-image-upload">
+        <img class="file-thumbnail mat-elevation-z3">
+        <label>
+            <input
+              type="file"
+              class="text-nowrap text-truncate"
+              (change)="selectFile($event)"
+            />
+              <div class="upload-progress" *ngIf="currentFileUpload">
+                <mat-progress-bar class="progress-bar"
+                                  mode="determinate"
+                 [value]="percentage">
+                </mat-progress-bar>
+                <span> {{ percentage }}%</span>
+            </div>
+          </label>
+      </div>
+      <button mat-raised-button color="warn"
+        class="btn btn-success btn-sm"
+        [disabled]="!selectedFiles"
+        (click)="upload()">
+        Αποθήκευση αρχείου
+      </button>
+    </form>
+  </div>

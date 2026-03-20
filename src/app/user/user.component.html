@@ -1,0 +1,23 @@
+<div class="create-course">
+    <h3>Προφίλ χρήστη</h3>
+
+     <form [formGroup]="form">
+
+      <mat-form-field appearance="outline">
+        <input placeholder="Όνομα" matInput formControlName="name">
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <input placeholder="Email" matInput formControlName="email">
+      </mat-form-field>
+     
+      <mat-dialog-actions>
+        <button  mat-raised-button color="warn" (click)="close()">
+          Ακύρωση
+        </button>
+        <button mat-raised-button color="primary" (click)="save()">
+          Αποθήκευση
+        </button>       
+    </mat-dialog-actions>
+    </form> 
+  </div>  

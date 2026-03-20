@@ -1,0 +1,45 @@
+ body {
+    margin: 0;
+  }
+  
+  main {
+    margin: 30px;
+  }
+  
+  .user-avatar {
+    max-height: 35px;
+    border-radius: 4px;
+  
+  }
+  
+  .toolbar-tools {
+    display: flex;
+    width: 100%;
+    color: black;
+   
+  }
+  
+  
+  .filler {
+    flex: 1 1 auto;
+    width: 100%;
+  }
+
+  .custom-toolbar {
+    background-image: url('/assets/logo.png'); /* or .png */
+    background-size: cover;
+    background-position: center;
+    color: white; /* Ensure text/icons are readable */
+    height: 650px; /* or your preferred height */
+    display: flex;
+    align-items: flex-start;   /* Align content to the top of the toolbar */
+    padding: 16px;
+    position: relative;
+    z-index: 1000;
+  }
+
+  .user-avatar {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }

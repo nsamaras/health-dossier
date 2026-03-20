@@ -1,0 +1,29 @@
+.example-form-field {
+    width: 200px;
+  }
+  
+  .courses-panel {
+    max-width:800px;
+    margin: 20px auto 0 auto;
+    text-align: center;
+  }
+  
+  
+  .header {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+  }
+  
+  .title {
+    text-align: center;
+    margin-right: 30px;
+  }
+  
+  
+  table {
+    width: 100%;
+  }
+  
+  

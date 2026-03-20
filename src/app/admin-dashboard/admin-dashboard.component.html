@@ -1,0 +1,26 @@
+
+<div class="user-dropdown">
+    <label for="users">Select User:</label>
+    <select id="users" (change)="onUserSelect($event)">
+        <option value="" disabled selected>Select a user</option>
+      <option *ngFor="let user of users" [value]="user.urid">
+        {{ user.email }}
+      </option>
+    </select>
+  </div>
+
+  <div  class="user-details">
+    <h3>Selected User Details</h3>
+    <p><strong>Name: </strong> {{ selectedUser.name }}</p>
+    <p><strong>Email: </strong> {{ selectedUser.email }}</p>
+    <p><strong>Ανανέωση active status: </strong>
+    <select id="yesNoDropdown" [(ngModel)]="updatedStatus">
+      <option  [value]="true">Yes</option>
+      <option [value]="false">No</option>
+    </select>
+  </p>
+  <button mat-raised-button color="primary" (click)="submitValue()">Submit</button> 
+  </div>
+  
+  
+  

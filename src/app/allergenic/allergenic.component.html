@@ -1,0 +1,64 @@
+
+    <div class="courses-panel">
+      <div class="header">
+        <h2 class="title">Αλλεργιογόνα</h2>        
+      </div>
+      <div class="centered-content">
+        <p>
+          {{ descriptionText }}
+        </p>
+
+      <mat-form-field  appearance="fill" class="example-full-width">
+        <mat-label> Προσθήκη προϊόντος στη λίστα</mat-label>
+        <input matInput #newOptionInput>
+      </mat-form-field>
+      <span style="margin-left: 50px;"></span>
+      <button mat-mini-fab color="warn" >
+        <mat-icon class="add-course-btn" (click)="addAllergenicProduct(newOptionInput.value)">add</mat-icon>
+      </button>
+      <span style="margin-left: 50px;"></span>
+        <button mat-raised-button color="primary" (click)="accordion.openAll()">Expand All</button> 
+        <button mat-raised-button color="primary" (click)="accordion.closeAll()">Collapse All</button>
+        <button mat-raised-button color="primary" (click)="export()">
+          Εκτύπωση
+          </button>
+    <mat-accordion class="example-headers-align" multi>
+      <mat-expansion-panel *ngFor="let option of allergenicProducts" (opened)="panelOpened(option)">
+        <mat-expansion-panel-header>
+          <mat-panel-title>
+            {{ option.productName }}
+          </mat-panel-title>
+          <mat-panel-description>
+            {{ option.productName }}
+            <mat-icon (click)="deleteProduct(option)">delete</mat-icon>
+          </mat-panel-description>
+        </mat-expansion-panel-header>
+        <span style="margin-left: 120px;"></span>
+          <mat-checkbox class="example-margin" (change)="selectAllContains($event)">
+            <h2 class="inline">ΠΕΡΙΕΧΕΙ</h2>
+          </mat-checkbox>
+          <span style="margin-left: 110px;"></span>
+          <mat-checkbox (change)="selectAllIngredients($event)">
+            <h2 class="inline">ΙΧΝΗ</h2>
+          </mat-checkbox>
+        
+          <section class="example-section">
+            <mat-list-item role="listitem" *ngFor="let item of option.allergenicData">
+              <span style="margin-right: 120px;"></span>
+              <mat-checkbox [(ngModel)] = item.checkedContains
+              (change)="onCheckboxChange(item, 'contains')"></mat-checkbox>
+              <span style="margin-left: 200px;"></span>
+              <mat-checkbox [(ngModel)] = item.checkedIngredients
+              (change)="onCheckboxChange(item, 'ingredients')"></mat-checkbox>
+              <span style="margin-left: 50px;"></span>
+              {{ item.name }}
+            </mat-list-item>
+          </section>
+          <span style="margin-left: 200px;"></span>
+        <button mat-raised-button color="primary" (click)="onSaveAllerginicData(option.productName, option.allergenicData)" >
+          Save
+        </button> 
+      </mat-expansion-panel>
+    </mat-accordion>
+    </div>
+  </div>

@@ -1,0 +1,95 @@
+<div class="courses-panel">
+
+  <div class="header">
+      <h2 class="title">Έλεγχος καθαρισμού</h2>        
+  </div>
+  <div class="centered-content">
+    <p>
+      {{ descriptionText }}
+    </p>
+ <br>
+ <br>
+  <!-- Έλεγχος καθαρισμού -->
+ <mat-tab-group mat-align-tabs="center"  (selectedTabChange)="tabChanged($event)">
+  <mat-tab label="Έλεγχος καθαρισμού" >
+           
+    <mat-accordion class="example-headers-align" multi>
+      <mat-expansion-panel>
+        <mat-expansion-panel-header>
+          <mat-panel-description>
+            Εκτύπωση
+            <mat-icon>date_range</mat-icon>
+          </mat-panel-description>
+        </mat-expansion-panel-header>
+    
+        <mat-form-field appearance="outline" >
+          <mat-label>Από</mat-label>
+          <input matInput [matDatepicker]="fromDatePicker"  (dateInput)="setDateFrom($event)" readonly>
+          <mat-datepicker-toggle matSuffix [for]="fromDatePicker"></mat-datepicker-toggle>
+          <mat-datepicker #fromDatePicker></mat-datepicker>
+        </mat-form-field>
+   
+        <mat-form-field appearance="outline" >
+          <mat-label>Εως</mat-label>
+          <input matInput [matDatepicker]="toDatePicker" (dateInput)="setDateTo($event)" readonly>
+          <mat-datepicker-toggle matSuffix [for]="toDatePicker"></mat-datepicker-toggle>
+          <mat-datepicker #toDatePicker></mat-datepicker>
+        </mat-form-field>
+        <button mat-raised-button color="primary" (click)="export()">
+          Εκτύπωση
+          </button>
+      </mat-expansion-panel>
+    </mat-accordion>
+    <br>
+   <br>
+       <form #myform = "ngForm">
+         <mat-form-field appearance="outline" >
+           <mat-label>Ημερομηνία</mat-label>
+           <input matInput [matDatepicker]="promoStartPicker" [max]="maxDate" (dateInput)="getCleaningByDate($event)">
+           <mat-datepicker-toggle matSuffix [for]="promoStartPicker"></mat-datepicker-toggle>
+           <mat-datepicker #promoStartPicker></mat-datepicker>
+         </mat-form-field>
+         <mat-list role="list">
+           <section class="example-section">          
+               <span class="example-list-section">
+                 <ul>
+                   <li>
+                     <mat-list-item>
+                       <mat-checkbox 
+                                     [checked]="allChecked" 
+                                     (change)="setAll($event.checked)">
+                          <b>Επιλογή όλων</b>
+                       </mat-checkbox>
+                     </mat-list-item>
+                     <mat-divider></mat-divider>
+                       <mat-list-item role="listitem" *ngFor="let item of cleaningData">
+                           <mat-checkbox [(ngModel)]="item.checked" 
+                                           name={{item.name}}
+                                           >
+                               {{item.name}}
+                             </mat-checkbox>
+                             <mat-divider></mat-divider>
+                       </mat-list-item>
+                       
+                   </li>
+                 </ul>
+               </span>
+             </section>
+       </mat-list>
+       <br>
+       <button mat-raised-button color="primary" (click)="onSaveCleaningData()" >
+         Save
+       </button>   
+    </form>
+  </mat-tab>
+
+     <!-- Αρχεία καθαρισμού -->
+  <mat-tab label="Αρχεία καθαρισμού" >
+        <app-cleaning-files> </app-cleaning-files> 
+  </mat-tab>
+
+    
+</mat-tab-group>
+    
+</div>  
+</div>

@@ -1,0 +1,113 @@
+.courses-panel {
+    max-width: 400px;
+    margin: 20px auto 0 auto;
+}
+
+.header {
+  white-space: normal;
+  word-wrap: break-word;
+  overflow: visible;
+  text-overflow: unset;
+  display: block;  /* Ensures the span takes full width */
+  max-width: 500%; /* Prevents text cutoff */
+  word-break: break-word; /* Ensures long words wrap */
+  max-width: 500px;
+  font-size: clamp(14px, 4vw, 20px);
+}
+
+.title {
+    text-align: center;
+    margin-right: 15px;
+}
+
+.center-content {
+    justify-content: center;
+  }
+
+.centered-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh; /* Full viewport height */
+    text-align: center; /* Center text horizontally */
+  }
+  
+span {
+    display: inline-block;
+  }
+
+
+  
+
+  /* Center toolbar content */
+mat-toolbar {
+    justify-content: center;
+    text-align: center;
+  }
+  
+  /* Center content both vertically and horizontally */
+  .centered-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+    text-align: center;
+  }
+  
+  h1 {
+    margin-bottom: 20px;
+  }
+  
+  p {
+    font-size: 16px;
+    line-height: 1.6;
+    max-width: 600px; /* Optional: Control the width of the text block */
+  }
+
+  ul {
+    list-style-type: disc; /* Default bullet points */
+    text-align: left; /* Align the bullet points to the left */
+    margin: 20px auto;
+    padding-left: 20px; /* Adjust padding to align bullets nicely */
+  }
+  
+  li {
+    font-size: 16px;
+    line-height: 1.6;
+    margin-bottom: 10px;
+  }
+
+  /* Super bold text styling */
+.super-bold {
+    font-weight: bolder; /* Use bolder or a specific weight if needed */
+    font-size: 100px; /* Adjust size for better visibility */
+    text-transform: uppercase; /* Make text uppercase */
+    letter-spacing: 2px; /* Optional: add spacing for emphasis */
+    color: #000; /* Optional: set a specific color */
+  }
+  
+
+  .shortcuts-container {
+    margin: 20px;
+  }
+  
+  .shortcut-links {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .shortcut {
+    padding: 10px 20px;
+    margin: 10px 0;
+    background-color: #0e8a50;
+    color: white;
+    text-decoration: none;
+    border-radius: 5px;
+    text-align: center;
+    font-size: 18px;
+  }
+  
+  .shortcut:hover {
+    background-color: #0056b3;
+  }
+  

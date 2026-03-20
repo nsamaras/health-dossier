@@ -1,0 +1,25 @@
+
+      <mat-toolbar >
+        <div class="header" src="assets/favicon.png">{{ titleText }}</div>
+      </mat-toolbar>
+      
+      
+      <div class="centered-content">
+        <p>
+          {{ descriptionText }}
+        </p>
+
+        <ul class="custom-bullets">
+            <li *ngFor="let item of items">
+                {{ item }}
+            </li>
+          </ul>
+          <p class="super-bold">HACCP</p>
+          <div class="shortcut-links" *ngIf="isLoggedIn">
+              <!-- Add links to different parts of the app -->
+              <a routerLink="/temperatures" class="shortcut">Αρχείo παρακολούθησης θερμοκρασιών</a>
+              <a routerLink="/cleaning-disinfection" class="shortcut">Έλεγχος καθαρισμού</a>
+          </div>
+          
+      </div>
+
