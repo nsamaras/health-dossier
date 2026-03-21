@@ -26,22 +26,36 @@ export class UserService {
     loginMessage = '';
     user: UserModel;
     userData: any;
-    isActiveUser: boolean;
     editUserId: string;
-    isAdminUser: boolean;
+
+    isActiveUser$ = new BehaviorSubject<boolean>(false);
+    isAdminUser$ = new BehaviorSubject<boolean>(false);
+
+    get isActiveUser() { return this.isActiveUser$.value; }
+    get isAdminUser() { return this.isAdminUser$.value; }
 
     constructor(private afAuth: AngularFireAuth, 
                 private router: Router,
                 private db: AngularFirestore) {
         this.isLoggedIn$ = afAuth.authState.pipe(map(user => !!user));
         this.isLoggedOut$ = this.isLoggedIn$.pipe(map(loggedIn => !loggedIn));
-        this.isActiveUser = false;
-        this.isAdminUser = false;
+        this.isActiveUser$.next(false);
+        this.isAdminUser$.next(false);
+
+        afAuth.authState.subscribe(user => {
+            if (user) {
+                this.setUser();
+            } else {
+                this.isActiveUser$.next(false);
+                this.isAdminUser$.next(false);
+                this.loginMessage = '';
+            }
+        });
     }
 
     getUserByUrid(urid: string) {
-        this.isActiveUser = false;
-        this.isAdminUser = false;
+        this.isActiveUser$.next(false);
+        this.isAdminUser$.next(false);
         return this.db.collection('users',
                 ref => ref
                 .where("urid", "==", urid))
@@ -91,8 +105,8 @@ export class UserService {
                 } else {
                     this.user = new UserModel(result[0].urid, result[0].email, result[0].name, result[0].isActive, result[0].isAdmin);      
                     this.loginMessage = ' Γεία σου ' + result[0].name;
-                    this.isActiveUser = result[0].isActive;
-                    this.isAdminUser = result[0].isAdmin;
+                    this.isActiveUser$.next(result[0].isActive);
+                    this.isAdminUser$.next(result[0].isAdmin);
                 }
                 });
             }

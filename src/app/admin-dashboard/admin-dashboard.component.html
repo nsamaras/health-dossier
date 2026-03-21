@@ -1,5 +1,10 @@
+<div class="page-container">
+  <div class="page-hero">
+    <mat-icon class="hero-icon">admin_panel_settings</mat-icon>
+    <h1 class="hero-title">Admin Dashboard</h1>
+  </div>
 
-<div class="user-dropdown">
+  <div class="user-dropdown">
     <label for="users">Select User:</label>
     <select id="users" (change)="onUserSelect($event)">
         <option value="" disabled selected>Select a user</option>
@@ -21,6 +26,4 @@
   </p>
   <button mat-raised-button color="primary" (click)="submitValue()">Submit</button> 
   </div>
-  
-  
-  
+</div>

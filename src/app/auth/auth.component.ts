@@ -28,8 +28,7 @@ export class AuthComponent implements OnInit, OnDestroy {
         this.afAuth.app.then(app => {
             const uiConfig = {
                 signInOptions: [
-                    EmailAuthProvider.PROVIDER_ID,
-                    GoogleAuthProvider.PROVIDER_ID 
+                    EmailAuthProvider.PROVIDER_ID
                                 ],
                 callbacks: {
                                 signInSuccessWithAuthResult: this.onLoginSuccessful.bind(this)

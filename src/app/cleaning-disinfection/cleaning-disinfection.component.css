@@ -1,87 +1,68 @@
-.example-form-field {
-    width: 200px;
-  }
-  
-  .courses-panel {
-    max-width:800px;
-    margin: 20px auto 0 auto;
-    text-align: center;
-  }
-  
-  
-  .header {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
-  
-  .title {
-    text-align: center;
-    margin-right: 30px;
-  }
-  
-  
-  table {
-    width: 100%;
-  }
-  
-  section {
-    display: table;
-  }
-  
-  .example-label {
-    display: table-cell;
-    font-size: 14px;
-    margin-left: 8px;
-    min-width: 120px;
-  }
-  
-  .example-button-row {
-    display: table-cell;
-    width: 490px;
-  }
-  
-  .example-button-row .mat-button-base {
-    margin: 8px 8px 8px 0;
-  }
-  
-  .example-flex-container {
-    display: flex;
-    justify-content: space-between;
-    flex-wrap: wrap;
-  }
-  
-  .example-button-container {
-    display: flex;
-    justify-content: center;
-    width: 120px;
-  }
-  
-  mat-form-field {
-    margin-right: 12px;
-  }
-  
-  .textSize {
-    width: 150px;
-  }
+.page-container {
+  max-width: 860px;
+  margin: 40px auto;
+  padding: 0 24px;
+}
 
-  .example-section {
-    margin: 12px 0;
-  }
-  
-  .example-margin {
-    margin: 0 12px;
-  }
-  
-  ul {
-    list-style-type: none;
-    margin-top: 4px;
-  }
 
-  .centered-content {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 20px;
-    text-align: center;
-  }
+.description-card {
+  border-radius: 12px !important;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.08) !important;
+  margin-bottom: 24px;
+}
+
+.description-text {
+  font-size: 15px;
+  line-height: 1.8;
+  color: #444;
+  margin: 0;
+}
+
+.content-card {
+  border-radius: 12px !important;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.08) !important;
+}
+
+.tab-content {
+  padding: 24px 8px;
+}
+
+.date-row {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 16px;
+}
+
+.form-section {
+  margin-top: 24px;
+}
+
+.date-field {
+  min-width: 200px;
+}
+
+.action-row {
+  margin-top: 16px;
+  display: flex;
+  justify-content: flex-end;
+}
+
+mat-form-field {
+  margin-right: 12px;
+}
+
+ul {
+  list-style-type: none;
+  margin-top: 4px;
+  padding: 0;
+}
+
+.example-section {
+  margin: 12px 0;
+}
+
+table {
+  width: 100%;
+}

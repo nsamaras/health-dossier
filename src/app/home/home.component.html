@@ -1,25 +1,32 @@
+<div class="home-container">
 
-      <mat-toolbar >
-        <div class="header" src="assets/favicon.png">{{ titleText }}</div>
-      </mat-toolbar>
-      
-      
-      <div class="centered-content">
-        <p>
-          {{ descriptionText }}
-        </p>
+  <div class="hero-section">
+    <h1 class="hero-title">{{ titleText }}</h1>
+  </div>
 
-        <ul class="custom-bullets">
-            <li *ngFor="let item of items">
-                {{ item }}
-            </li>
-          </ul>
-          <p class="super-bold">HACCP</p>
-          <div class="shortcut-links" *ngIf="isLoggedIn">
-              <!-- Add links to different parts of the app -->
-              <a routerLink="/temperatures" class="shortcut">Αρχείo παρακολούθησης θερμοκρασιών</a>
-              <a routerLink="/cleaning-disinfection" class="shortcut">Έλεγχος καθαρισμού</a>
-          </div>
-          
-      </div>
+  <mat-card class="description-card">
+    <mat-card-content>
+      <p class="description-text">{{ descriptionText }}</p>
+      <ul class="custom-bullets">
+        <li *ngFor="let item of items">{{ item }}</li>
+      </ul>
+    </mat-card-content>
+  </mat-card>
 
+  <div class="haccp-badge">HACCP</div>
+
+  <div class="shortcut-links" *ngIf="isLoggedIn">
+    <h3 class="shortcuts-title">Γρήγορη πρόσβαση</h3>
+    <div class="shortcuts-grid">
+      <a routerLink="/temperatures" class="shortcut-card">
+        <mat-icon>thermostat</mat-icon>
+        <span>Αρχείo παρακολούθησης θερμοκρασιών</span>
+      </a>
+      <a routerLink="/cleaning-disinfection" class="shortcut-card">
+        <mat-icon>cleaning_services</mat-icon>
+        <span>Έλεγχος καθαρισμού</span>
+      </a>
+    </div>
+  </div>
+
+</div>

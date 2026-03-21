@@ -1,45 +1,49 @@
- body {
+body {
     margin: 0;
   }
   
-  main {
-    margin: 30px;
-  }
-  
-  .user-avatar {
-    max-height: 35px;
-    border-radius: 4px;
-  
+  .custom-toolbar {
+    background-color: #ffffff !important;
+    height: 90px !important;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+    padding: 0 16px !important;
   }
   
   .toolbar-tools {
     display: flex;
     width: 100%;
-    color: black;
-   
-  }
-  
-  
-  .filler {
-    flex: 1 1 auto;
-    width: 100%;
+    align-items: center;
+    height: 100%;
   }
 
-  .custom-toolbar {
-    background-image: url('/assets/logo.png'); /* or .png */
-    background-size: cover;
-    background-position: center;
-    color: white; /* Ensure text/icons are readable */
-    height: 650px; /* or your preferred height */
-    display: flex;
-    align-items: flex-start;   /* Align content to the top of the toolbar */
-    padding: 16px;
-    position: relative;
-    z-index: 1000;
+  .toolbar-logo {
+    height: 76px;
+    width: auto;
+    max-width: 300px;
+    object-fit: contain;
+  }
+
+  .menu-btn {
+    color: #1a66d2;
+  }
+
+  .filler {
+    flex: 1 1 auto;
   }
 
   .user-avatar {
     display: flex;
     align-items: center;
-    gap: 4px;
+    gap: 6px;
+    color: #1a66d2;
+    font-weight: 500;
+  }
+
+  ::ng-deep mat-sidenav-content {
+    padding-top: 90px !important;
   }
