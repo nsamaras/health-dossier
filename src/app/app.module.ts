@@ -34,7 +34,7 @@ import {LoginComponent} from './login/login.component';
 import {AppRoutingModule} from './app-routing.module';
 import {MatSlideToggleModule} from '@angular/material/slide-toggle';
 import {HTTP_INTERCEPTORS, HttpClientModule} from '@angular/common/http';
-import {MatNativeDateModule} from '@angular/material/core';
+import {MatNativeDateModule, MAT_DATE_LOCALE} from '@angular/material/core';
 import { BusinessComponent } from './business/business.component';
 import { BusinessFilesComponent } from './business/business-files/business-files.component';
 import { BusinessFileDetailsComponent } from './business/business-file-details/business-file-details.component';
@@ -163,7 +163,8 @@ import { AdminDashboardComponent } from './admin-dashboard/admin-dashboard.compo
     AngularFireAuthModule,
     AngularFireFunctionsModule,    
   ],
-  providers: [DisinsectService, WaterService, StaffService, BusinessService, TemperatureService, FileUploadService, CleaningService, SupplierService, ExportService
+  providers: [DisinsectService, WaterService, StaffService, BusinessService, TemperatureService, FileUploadService, CleaningService, SupplierService, ExportService,
+    { provide: MAT_DATE_LOCALE, useValue: 'en-GB' }
   ],
   bootstrap: [AppComponent]
 })
