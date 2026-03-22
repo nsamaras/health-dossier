@@ -52,6 +52,3 @@ Thumbs.db
 connect.lock
 libpeerconnection.log
 
-# Environment files (optional: uncomment if you want to keep them local)
-/src/environments/environment.ts
-/src/environments/environment.prod.ts
