@@ -44,7 +44,24 @@
   width: 300px;
 }
 
-.uploaded-image {
-  max-width: 250px;
+.hidden-input {
+  display: none;
+}
+
+.file-select-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.file-name-label {
+  font-size: 14px;
+  color: #666;
+  font-style: italic;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 200px;
 }
 
