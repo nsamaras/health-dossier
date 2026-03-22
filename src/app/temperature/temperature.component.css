@@ -128,6 +128,17 @@ mat-form-field {
   text-align: center;
 }
 
+.delete-icon {
+  cursor: pointer;
+  color: #e53935;
+  font-size: 22px;
+  transition: color 0.2s;
+}
+
+.delete-icon:hover {
+  color: #b71c1c;
+}
+
 .action-row {
   margin-top: 16px;
   margin-bottom: 16px;

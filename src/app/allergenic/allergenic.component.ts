@@ -45,6 +45,7 @@ export class AllergenicComponent implements OnInit {
 
   @ViewChild(MatAccordion) accordion: MatAccordion;
 
+  displayedColumnsAllergenic: string[] = ['name', 'contains', 'ingredients'];
   allChecked: boolean = false;
   allergenicData: AllergenicInstanceModel[];
   allergenic: AllergenicProductModel;
