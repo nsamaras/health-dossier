@@ -51,35 +51,40 @@
 
             <div class="form-section">
               <form #myform="ngForm">
-                <mat-form-field appearance="outline" class="date-field">
+                <mat-form-field appearance="outline" class="date-field" [class.mat-form-field-invalid]="showDateError">
                   <mat-label>Ημερομηνία</mat-label>
                   <input matInput [matDatepicker]="promoStartPicker" [max]="maxDate" (dateInput)="getCleaningByDate($event)">
                   <mat-datepicker-toggle matSuffix [for]="promoStartPicker"></mat-datepicker-toggle>
                   <mat-datepicker #promoStartPicker></mat-datepicker>
+                  <mat-error *ngIf="showDateError">Παρακαλώ επιλέξτε ημερομηνία</mat-error>
                 </mat-form-field>
 
-                <mat-list role="list">
-                  <section class="example-section">
-                    <span class="example-list-section">
-                      <ul>
-                        <li>
-                          <mat-list-item>
-                            <mat-checkbox [checked]="allChecked" (change)="setAll($event.checked)">
-                              <b>Επιλογή όλων</b>
-                            </mat-checkbox>
-                          </mat-list-item>
-                          <mat-divider></mat-divider>
-                          <mat-list-item role="listitem" *ngFor="let item of cleaningData">
-                            <mat-checkbox [(ngModel)]="item.checked" name={{item.name}}>
-                              {{item.name}}
-                            </mat-checkbox>
-                            <mat-divider></mat-divider>
-                          </mat-list-item>
-                        </li>
-                      </ul>
-                    </span>
-                  </section>
-                </mat-list>
+                <div class="table-wrapper">
+                  <table mat-table [dataSource]="cleaningData" class="cleaning-table mat-elevation-z2">
+
+                    <!-- Checkbox Column -->
+                    <ng-container matColumnDef="select">
+                      <th mat-header-cell *matHeaderCellDef>
+                        <mat-checkbox [checked]="allChecked" (change)="setAll($event.checked)">
+                          <b>Επιλογή όλων</b>
+                        </mat-checkbox>
+                      </th>
+                      <td mat-cell *matCellDef="let item">
+                        <mat-checkbox [(ngModel)]="item.checked" name="{{item.name}}">
+                        </mat-checkbox>
+                      </td>
+                    </ng-container>
+
+                    <!-- Name Column -->
+                    <ng-container matColumnDef="name">
+                      <th mat-header-cell *matHeaderCellDef>Εργασία καθαρισμού</th>
+                      <td mat-cell *matCellDef="let item">{{ item.name }}</td>
+                    </ng-container>
+
+                    <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+                    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+                  </table>
+                </div>
 
                 <div class="action-row">
                   <button mat-raised-button color="primary" (click)="onSaveCleaningData()">

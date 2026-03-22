@@ -66,6 +66,7 @@ export class CleaningDisinfectionComponent implements OnInit {
   cleaningData: CleaningModel[];
   allChecked: boolean = false;
   date: Timestamp;
+  showDateError: boolean = false;
 
   constructor(private fb: FormBuilder,
               private router: Router,
@@ -97,6 +98,11 @@ export class CleaningDisinfectionComponent implements OnInit {
   }
 
   onSaveCleaningData() {
+      if (!this.editDate) {
+        this.showDateError = true;
+        return;
+      }
+      this.showDateError = false;
       this.cleaningData.forEach(t => {
         if(t.docId === null || t.docId === undefined) {
           t.date = this.editDate;
@@ -106,16 +112,16 @@ export class CleaningDisinfectionComponent implements OnInit {
           .pipe(
             tap(() => {
               Swal.fire(
-                'Good job!',
-                'You clicked the button!',
+                'Επιτυχία!',
+                'Τα δεδομένα αποθηκεύτηκαν επιτυχώς!',
                 'success'
               )
             }),
             catchError(err => {
               Swal.fire({
                 icon: 'error',
-                title: 'Oops...',
-                text: 'Something went wrong!'
+                title: 'Σφάλμα',
+                text: 'Κάτι πήγε στραβά. Παρακαλώ δοκιμάστε ξανά!'
               })
               return throwError(err)
             })
@@ -125,16 +131,16 @@ export class CleaningDisinfectionComponent implements OnInit {
           .pipe(
             tap(() => {
               Swal.fire(
-                'Good job!',
-                'You clicked the button!',
+                'Επιτυχία!',
+                'Τα δεδομένα ενημερώθηκαν επιτυχώς!',
                 'success'
               )
             }),
             catchError(err => {
               Swal.fire({
                 icon: 'error',
-                title: 'Oops...',
-                text: 'Something went wrong!'
+                title: 'Σφάλμα',
+                text: 'Κάτι πήγε στραβά. Παρακαλώ δοκιμάστε ξανά!'
               })
               return throwError(err)
             })
@@ -144,6 +150,7 @@ export class CleaningDisinfectionComponent implements OnInit {
   }
 
   getCleaningByDate(event: MatDatepickerInputEvent<Date>) {
+    this.showDateError = false;
     this.editDate = Timestamp.fromDate(event.target.value);
     this.cleaningService.getCleaningByDate(this.editDate)
     .subscribe(cl => {
