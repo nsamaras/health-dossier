@@ -4,8 +4,12 @@
           <h2 class="title">Αξιολόγηση προμηθευτών</h2>        
         </div>
         <div class="header">
-            <button mat-button (click)="accordion.openAll()">Άνοιγμα όλων των καρτελών</button>
-            <button mat-button (click)="accordion.closeAll()">Κλείσιμο όλων των καρτελών</button>
+            <button mat-raised-button color="primary" (click)="accordion.openAll()">
+              <mat-icon>expand_more</mat-icon> Ανάπτυξη Όλων
+            </button>
+            <button mat-raised-button color="primary" (click)="accordion.closeAll()">
+              <mat-icon>expand_less</mat-icon> Σύμπτυξη Όλων
+            </button>
         </div>
          
       <mat-accordion class="example-headers-align" multi>
@@ -43,7 +47,8 @@
             </mat-form-field>
             
             <!-- Κριτήρια (Βαθμολογία 1-5) -->
-            <table mat-table [dataSource]="supplier.criteriaEvaluation">
+            <div class="table-wrapper">
+            <table mat-table [dataSource]="supplier.criteriaEvaluation" class="evaluation-table mat-elevation-z2">
                 Κριτήρια (Βαθμολογία 1-5)
                 <ng-container matColumnDef="name">
                   <th mat-header-cell *matHeaderCellDef><b> Κριτήρια (Βαθμολογία 0-5)</b> </th>
@@ -73,6 +78,7 @@
                 <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
                 <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
             </table>
+            </div>
 
             <br>
             <div style="text-align: right;">
@@ -90,7 +96,8 @@
               <br>
 
                <!-- ΣΥΝΟΛΙΚΗ ΒΑΘΜΟΛΟΓΙΑ -->
-            <table mat-table [dataSource]="dataRoolsSource">
+            <div class="table-wrapper">
+            <table mat-table [dataSource]="dataRoolsSource" class="evaluation-table mat-elevation-z2">
                 ΣΥΝΟΛΙΚΗ ΒΑΘΜΟΛΟΓΙΑ
                 <ng-container matColumnDef="column_1">
                   <th mat-header-cell *matHeaderCellDef><b> ΣΥΝΟΛΙΚΗ ΒΑΘΜΟΛΟΓΙΑ</b> </th>
@@ -110,16 +117,17 @@
                 <tr mat-header-row *matHeaderRowDef="displayedRoolsColumns"></tr>
                 <tr mat-row *matRowDef="let row; columns: displayedRoolsColumns;"></tr>
             </table>
-            
+            </div>
+
             <br>
             
-              <div class="center-container">
-                <button mat-raised-button color="primary" 
+              <div class="action-row">
+                <button mat-raised-button color="primary"
                         (click)="onSave(supplier)">
-                    Save
-                  </button> 
-                </div>
-          
+                  <mat-icon>save</mat-icon> Αποθήκευση
+                </button>
+              </div>
+
         </mat-expansion-panel>
       </mat-accordion>
       </div>

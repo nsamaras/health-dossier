@@ -1,71 +1,50 @@
-<div class="courses-panel">
-    <button mat-mini-fab color="warn" (click)="addSupplier()">
-      <mat-icon class="add-course-btn">add</mat-icon>
+<div class="tab-content">
+  <div class="toolbar-row">
+    <button mat-raised-button color="primary" (click)="addSupplier()">
+      <mat-icon>add</mat-icon> Προσθήκη
     </button>
+  </div>
 
-    <br>
-      <form #myform = "ngForm" >
-        <table mat-table [dataSource]="suppliersData" >
-          <ng-container matColumnDef="name">
-            <th *matHeaderCellDef> Όνομα </th>
-            <td mat-cell *matCellDef="let element ; let i = index;"> 
-              <mat-form-field  appearance="fill">
-                <mat-label> Όνομα</mat-label>
-                <input matInput type="text" 
-                            name="name{{i}}"
-                            [(ngModel)]="element.name" >
-              </mat-form-field>
-            </td>
-          </ng-container>
-          
-          <ng-container matColumnDef="type">
-            <th *matHeaderCellDef> Είδος </th>
-            <td mat-cell *matCellDef="let element ; let i = index;"> 
-              <mat-form-field  appearance="fill">
-                <mat-label> Είδος</mat-label>
-                <input matInput type="text" 
-                            name="type{{i}}"
-                            value="{{element.type}}"
-                            [(ngModel)]="element.type" readonly
-                            tabindex="-1" >
-                 </mat-form-field> 
-            </td>
-          </ng-container>
-          <!-- <ng-container matColumnDef="type">
-            <th *matHeaderCellDef> Είδος </th>
-            <td mat-cell *matCellDef="let element ; let i = index;"> 
-              <mat-form-field  appearance="fill">
-                <mat-label> Είδος</mat-label>
-                  <mat-select [(value)]="element.type">
-                      <mat-option *ngFor="let type of suppliersTypes" 
-                          value="{{type.description}}">
-                        {{type.description}}
-                      </mat-option>
-                  </mat-select>
-                 </mat-form-field> 
-            </td>
-          </ng-container> -->
-        
-          <ng-container matColumnDef="delete">
-            <th *matHeaderCellDef> Διαγραφή </th>       
-            <td mat-cell *matCellDef="let element ; let i = index;">          
-              <button mat-mini-fab color="warn" aria-label="Example icon button with a delete icon" 
-              (click)="onDeleteSupplier(element, i)">
-                <mat-icon>delete</mat-icon>
-              </button>
-            </td>       
-          </ng-container>
-          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-          <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-        </table>
-        <br>
-        <button mat-raised-button color="primary" (click)="onSaveSupplier()">
-          Save
-        </button>
-    </form>
+  <form #myform="ngForm">
+    <div class="table-wrapper">
+      <table mat-table [dataSource]="suppliersData" class="suppliers-table mat-elevation-z2">
 
-    
-    
+        <ng-container matColumnDef="name">
+          <th mat-header-cell *matHeaderCellDef> Όνομα </th>
+          <td mat-cell *matCellDef="let element; let i = index;">
+            <mat-form-field appearance="fill">
+              <mat-label>Όνομα</mat-label>
+              <input matInput type="text" name="name{{i}}" [(ngModel)]="element.name">
+            </mat-form-field>
+          </td>
+        </ng-container>
 
-  </div>  
-  
+        <ng-container matColumnDef="type">
+          <th mat-header-cell *matHeaderCellDef> Είδος </th>
+          <td mat-cell *matCellDef="let element; let i = index;">
+            <mat-form-field appearance="fill">
+              <mat-label>Είδος</mat-label>
+              <input matInput type="text" name="type{{i}}" [(ngModel)]="element.type" readonly tabindex="-1">
+            </mat-form-field>
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="delete">
+          <th mat-header-cell *matHeaderCellDef> Διαγραφή </th>
+          <td mat-cell *matCellDef="let element; let i = index;">
+            <mat-icon class="delete-icon" (click)="onDeleteSupplier(element, i)">delete</mat-icon>
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+      </table>
+    </div>
+
+    <div class="action-row">
+      <button mat-raised-button color="primary" (click)="onSaveSupplier()">
+        <mat-icon>save</mat-icon> Αποθήκευση
+      </button>
+    </div>
+  </form>
+</div>

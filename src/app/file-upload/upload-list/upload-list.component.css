@@ -1,4 +1,3 @@
-
 table {
   width: 100%;
   border-radius: 8px;
@@ -35,3 +34,13 @@ tr.mat-row:hover {
   display: none !important;
 }
 
+.delete-icon {
+  cursor: pointer;
+  color: #e53935;
+  font-size: 22px;
+  transition: color 0.2s;
+}
+
+.delete-icon:hover {
+  color: #b71c1c;
+}

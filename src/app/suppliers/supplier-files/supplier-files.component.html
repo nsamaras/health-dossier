@@ -1,24 +1,33 @@
-<div class="courses-panel">
-    <div class="page-hero">
-        <mat-icon class="hero-icon">local_shipping</mat-icon>
-        <h1 class="hero-title">Αρχεία προμηθευτών</h1>
-    </div>
-    <div class="centered-content">
-        <p>
-          {{ descriptionText }}
-        </p>
+<div class="page-container">
+  <div class="page-hero">
+    <mat-icon class="hero-icon">local_shipping</mat-icon>
+    <h1 class="hero-title">Αρχεία προμηθευτών</h1>
+  </div>
+
+  <mat-card class="description-card">
+    <mat-card-content>
+      <p class="description-text">{{ descriptionText }}</p>
+    </mat-card-content>
+  </mat-card>
+
+  <mat-card class="content-card">
+    <mat-card-content>
+      <div class="toolbar-row">
+        <span class="spacer"></span>
         <button mat-raised-button color="primary" (click)="export()">
-            Εκτύπωση
-            </button>
-    <mat-tab-group (selectedTabChange)="tabChanged($event)" mat-align-tabs="center">
-        <mat-tab  label="Λίστα προμηθευτών" >
-            <app-suppliers-list></app-suppliers-list>
-        </mat-tab>  
-        <mat-tab  label="Αξιολόγηση προμηθευτών" >
-            <div *ngIf="selectedTabIndex === 1">
-                <app-supplier-evaluation></app-supplier-evaluation>
-            </div>
-        </mat-tab>       
-    </mat-tab-group>
-    </div> 
-</div> 
+          <mat-icon>print</mat-icon> Εκτύπωση
+        </button>
+      </div>
+      <mat-tab-group (selectedTabChange)="tabChanged($event)" mat-align-tabs="center">
+        <mat-tab label="Λίστα προμηθευτών">
+          <app-suppliers-list></app-suppliers-list>
+        </mat-tab>
+        <mat-tab label="Αξιολόγηση προμηθευτών">
+          <div *ngIf="selectedTabIndex === 1">
+            <app-supplier-evaluation></app-supplier-evaluation>
+          </div>
+        </mat-tab>
+      </mat-tab-group>
+    </mat-card-content>
+  </mat-card>
+</div>
