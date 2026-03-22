@@ -113,7 +113,7 @@ export class TemperatureProfileComponent implements OnInit {
       this.temperatureService.deleleteCategoryFromProfile(this.fridgeDataSource[index].docId, "FRIDGES")
     .pipe(
       tap( () => {
-        Swal.fire('Η διαγραφή ολοκληρώθηκε', 'success');
+        Swal.fire('Η διαγραφή ολοκληρώθηκε!', 'Η εγγραφή διαγράφηκε επιτυχώς.', 'success');
       }),
       catchError(error => {
         console.log("error");
@@ -133,7 +133,7 @@ export class TemperatureProfileComponent implements OnInit {
       this.temperatureService.deleleteCategoryFromProfile(this.freezerDataSource[index].docId, "FREEZERS")
       .pipe(
         tap( () => {
-          Swal.fire('Η διαγραφή ολοκληρώθηκε', 'success');
+          Swal.fire('Η διαγραφή ολοκληρώθηκε!', 'Η εγγραφή διαγράφηκε επιτυχώς.', 'success');
         }),
         catchError(error => {
           console.log("error");
@@ -153,7 +153,7 @@ export class TemperatureProfileComponent implements OnInit {
       this.temperatureService.deleleteCategoryFromProfile(this.cookDatasource[index].docId, "COOKED")
       .pipe(
         tap( () => {
-          Swal.fire('Η διαγραφή ολοκληρώθηκε', 'success');
+          Swal.fire('Η διαγραφή ολοκληρώθηκε!', 'Η εγγραφή διαγράφηκε επιτυχώς.', 'success');
         }),
         catchError(error => {
           console.log("error");
@@ -172,7 +172,7 @@ export class TemperatureProfileComponent implements OnInit {
       this.temperatureService.deleleteCategoryFromProfile(this.hotsDataSource[index].docId, "HOTS")
       .pipe(
         tap( () => {
-          Swal.fire('Η διαγραφή ολοκληρώθηκε', 'success');
+          Swal.fire('Η διαγραφή ολοκληρώθηκε!', 'Η εγγραφή διαγράφηκε επιτυχώς.', 'success');
         }),
         catchError(error => {
           console.log("error");

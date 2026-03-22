@@ -1,12 +1,12 @@
 <div class="create-course">
-    <h3>Δημιουργία προφίλ θερμοκρασιών</h3>
+  <h3 mat-dialog-title>Δημιουργία προφίλ θερμοκρασιών</h3>
 
+  <mat-dialog-content>
     <form [formGroup]="form">
-
       <mat-form-field appearance="outline">
         <input placeholder="Όνομα" matInput formControlName="name">
       </mat-form-field>
-     
+
       <mat-form-field appearance="outline">
         <mat-select placeholder="Συντήρηση/Κατάψυξη" formControlName="category">
           <mat-option value="FRIDGES">Συντήρηση</mat-option>
@@ -14,23 +14,16 @@
           <mat-option value="HOTS">Διατήρηση εν θερμώ</mat-option>
           <mat-option value="COOKED">Μαγειρεμένα</mat-option>
         </mat-select>
-      </mat-form-field>       
-      
-      <!-- <mat-form-field appearance="outline">
-        <mat-label>Ημερομηνία</mat-label>
-        <input matInput [matDatepicker]="promoStartPicker" [max]="maxDate" formControlName="date">
-        <mat-datepicker-toggle matSuffix [for]="promoStartPicker"></mat-datepicker-toggle>
-        <mat-datepicker #promoStartPicker></mat-datepicker>
-      </mat-form-field> -->
-
-      <mat-dialog-actions>
-        <button mat-raised-button (click)="close()">
-          Close
-      </button>
-        <button mat-raised-button color="warn" [disabled]="!form.valid"
-                        (click)="saveCategory()">
-        Προσθήκη
-      </button>
-    </mat-dialog-actions>
+      </mat-form-field>
     </form>
-  </div>  
+  </mat-dialog-content>
+
+  <mat-dialog-actions align="end">
+    <button mat-raised-button (click)="close()">
+      <mat-icon>close</mat-icon> Κλείσιμο
+    </button>
+    <button mat-raised-button color="primary" [disabled]="!form.valid" (click)="saveCategory()">
+      <mat-icon>add</mat-icon> Προσθήκη
+    </button>
+  </mat-dialog-actions>
+</div>

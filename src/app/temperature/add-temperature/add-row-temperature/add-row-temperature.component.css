@@ -5,7 +5,11 @@
 }
 
 .create-course {
-    margin-top: 20px;
+    min-width: 420px;
+}
+
+::ng-deep .mat-dialog-content {
+    padding-bottom: 64px !important;
 }
 
 .course-thumbnail {
@@ -17,6 +21,10 @@
 .create-course form {
     display: flex;
     flex-direction: column;
+}
+
+.create-course form mat-form-field {
+    width: 100%;
 }
 
 .course-image-upload {

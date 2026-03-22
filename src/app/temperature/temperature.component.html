@@ -59,7 +59,8 @@
    <mat-tab-group mat-align-tabs="center">
     <mat-tab label="Συντήρηση" >
     <form #myform = "ngForm">
-        <table mat-table [dataSource]="fridgeData" class="mat-elevation-z8">
+        <div class="table-scroll">
+        <table mat-table [dataSource]="fridgeData" class="fridge-table mat-elevation-z2">
           <ng-container matColumnDef="name">
             <th mat-header-cell *matHeaderCellDef> Όνομα </th>
             <td mat-cell *matCellDef="let element ; let i = index;" class="example-form-field"> 
@@ -118,187 +119,197 @@
           <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
           <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
         </table>
-        <br>
-        <button mat-raised-button color="primary" (click)="saveAll()">
-          Save
-        </button>
+        </div>
+        <mat-paginator #fridgePaginator [pageSize]="5" [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
+        <div class="action-row">
+          <button mat-raised-button color="primary" (click)="saveAll()">
+            <mat-icon>save</mat-icon> Αποθήκευση
+          </button>
+        </div>
     </form>
   </mat-tab>
 
       <!-- Κατάψυξη -->
       <mat-tab label="Κατάψυξη">
         <form #myform = "ngForm">
-        <table mat-table [dataSource]="freezerData" class="mat-elevation-z8">
-          <ng-container matColumnDef="name">
-            <th mat-header-cell *matHeaderCellDef> Όνομα </th>
-            <td mat-cell *matCellDef="let element ; let i = index;" class="example-form-field"> 
-              <mat-form-field class="example-form-field" appearance="fill">
-                <mat-label> Ονομα</mat-label>
-                <input matInput type="text" 
-                            name="name{{i}}"
-                            [(ngModel)]="element.name" >
-              </mat-form-field>
-            </td>
-          </ng-container>
-        
-          <ng-container matColumnDef="temperatureMorning">
-            <th mat-header-cell *matHeaderCellDef> Πρωινή Θερμοκρασία < -18°C </th>
-            <td mat-cell *matCellDef="let element ; let i = index;">
-              <mat-form-field class="example-form-field" appearance="fill">
-                <mat-label> Πρωινή Θερμοκρασία </mat-label>
+          <div class="table-scroll">
+          <table mat-table [dataSource]="freezerData" class="fridge-table mat-elevation-z2">
+            <ng-container matColumnDef="name">
+              <th mat-header-cell *matHeaderCellDef> Όνομα </th>
+              <td mat-cell *matCellDef="let element ; let i = index;" class="example-form-field">
+                <mat-form-field class="example-form-field" appearance="fill">
+                  <mat-label> Ονομα</mat-label>
+                  <input matInput type="text"
+                              name="name{{i}}"
+                              [(ngModel)]="element.name" >
+                </mat-form-field>
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="temperatureMorning">
+              <th mat-header-cell *matHeaderCellDef> Πρωινή Θερμοκρασία &lt; -18°C </th>
+              <td mat-cell *matCellDef="let element ; let i = index;">
+                <mat-form-field class="example-form-field" appearance="fill">
+                  <mat-label> Πρωινή Θερμοκρασία </mat-label>
+                        <mat-select
+                            name="temperatureMorning{{i}}"
+                            [(ngModel)]="element.temperatureMorning">
+                            <mat-option *ngFor="let temperature of temperatureFreezerOptions" [value]="temperature">
+                              {{ temperature }} °C
+                            </mat-option>
+                          </mat-select>
+                </mat-form-field>
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="temperatureAfternoon">
+              <th mat-header-cell *matHeaderCellDef> Απόγευματινη Θερμοκρασία &lt; -18°C </th>
+              <td mat-cell *matCellDef="let element ; let i = index;">
+                <mat-form-field class="example-form-field" appearance="fill">
+                  <mat-label> Απόγευματινη Θερμοκρασία</mat-label>
                       <mat-select
-                          name="temperatureMorning{{i}}"
-                          [(ngModel)]="element.temperatureMorning"                        >
-                          <!-- Options for the dropdown -->
-                          <mat-option *ngFor="let temperature of temperatureFreezerOptions" [value]="temperature">
-                            {{ temperature }} °C
-                          </mat-option>
-                        </mat-select>
-              </mat-form-field>
-            </td>
-          </ng-container>
+                            name="temperatureAfternoon{{i}}"
+                            [(ngModel)]="element.temperatureAfternoon">
+                            <mat-option *ngFor="let temperature of temperatureFreezerOptions" [value]="temperature">
+                              {{ temperature }} °C
+                            </mat-option>
+                          </mat-select>
+                </mat-form-field>
+              </td>
+            </ng-container>
 
-          <ng-container matColumnDef="temperatureAfternoon">
-            <th mat-header-cell *matHeaderCellDef> Απόγευματινη Θερμοκρασία < -18°C </th>
-            <td mat-cell *matCellDef="let element ; let i = index;">
-              <mat-form-field class="example-form-field" appearance="fill">
-                <mat-label> Απόγευματινη Θερμοκρασία</mat-label>
-                    <mat-select
-                          name="temperatureAfternoon{{i}}"
-                          [(ngModel)]="element.temperatureAfternoon"                        >
-                          <!-- Options for the dropdown -->
-                          <mat-option *ngFor="let temperature of temperatureFreezerOptions" [value]="temperature">
-                            {{ temperature }} °C
-                          </mat-option>
-                        </mat-select>
-                
-              </mat-form-field>
-            </td>
-          </ng-container>
+            <ng-container matColumnDef="delete">
+              <th mat-header-cell *matHeaderCellDef> Διαγραφή </th>
+              <td mat-cell *matCellDef="let element ; let i = index;">
+                <button mat-mini-fab color="warn" aria-label="Example icon button with a delete icon" (click)="onDeleteFreezerTemperature(i)">
+                  <mat-icon>delete</mat-icon>
+                </button>
+              </td>
+            </ng-container>
 
-          <ng-container matColumnDef="delete">
-            <th mat-header-cell *matHeaderCellDef> Διαγραφή </th>       
-            <td mat-cell *matCellDef="let element ; let i = index;">          
-              <button mat-mini-fab color="warn" aria-label="Example icon button with a delete icon" (click)="onDeleteFreezerTemperature(i)">
-                <mat-icon>delete</mat-icon>
-              </button>
-            </td>       
-          </ng-container>
-        
-          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-          <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-        </table>
-        <br>
-        <button mat-raised-button color="primary" (click)="saveAll()">
-          Save
-        </button>
-      </form>
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+          </table>
+          </div>
+          <mat-paginator #freezerPaginator [pageSize]="5" [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
+          <div class="action-row">
+            <button mat-raised-button color="primary" (click)="saveAll()">
+              <mat-icon>save</mat-icon> Αποθήκευση
+            </button>
+          </div>
+        </form>
       </mat-tab>
 
 
       <!-- Διατήρηση εν θερμώ -->
       <mat-tab label="Διατήρηση εν θερμώ">
         <form #myform = "ngForm">
-        <table mat-table [dataSource]="hotsData" class="mat-elevation-z8">
-          <ng-container matColumnDef="name">
-            <th mat-header-cell *matHeaderCellDef> Όνομα </th>
-            <td mat-cell *matCellDef="let element ; let i = index;" class="example-form-field"> 
-              <mat-form-field class="example-form-field" appearance="fill">
-                <mat-label> Ονομα</mat-label>
-                <input matInput type="text" 
-                            name="name{{i}}"
-                            [(ngModel)]="element.name" >
-              </mat-form-field>
-            </td>
-          </ng-container>
-        
-          <ng-container matColumnDef="temperature">
-            <th mat-header-cell *matHeaderCellDef> Θερμοκρασία > 60°C </th>
-            <td mat-cell *matCellDef="let element ; let i = index;">
-              <mat-form-field class="example-form-field" appearance="fill">
-                <mat-label> Θερμοκρασία > 60°C </mat-label>
-                      <mat-select
-                          name="temperature{{i}}"
-                          [(ngModel)]="element.temperature">
-                          <!-- Options for the dropdown -->
-                          <mat-option *ngFor="let temperature of temperatureHotsOptions" [value]="temperature">
-                            {{ temperature }} °C
-                          </mat-option>
-                        </mat-select>
-              </mat-form-field>
-            </td>
-          </ng-container>
+          <div class="table-scroll">
+          <table mat-table [dataSource]="hotsData" class="fridge-table mat-elevation-z2">
+            <ng-container matColumnDef="name">
+              <th mat-header-cell *matHeaderCellDef> Όνομα </th>
+              <td mat-cell *matCellDef="let element ; let i = index;" class="example-form-field">
+                <mat-form-field class="example-form-field" appearance="fill">
+                  <mat-label> Ονομα</mat-label>
+                  <input matInput type="text"
+                              name="name{{i}}"
+                              [(ngModel)]="element.name" >
+                </mat-form-field>
+              </td>
+            </ng-container>
 
-          <ng-container matColumnDef="delete">
-            <th mat-header-cell *matHeaderCellDef> Διαγραφή </th>       
-            <td mat-cell *matCellDef="let element ; let i = index;">          
-              <button mat-mini-fab color="warn" aria-label="Example icon button with a delete icon" (click)="onDeleteHotTemperature(i)">
-                <mat-icon>delete</mat-icon>
-              </button>
-            </td>       
-          </ng-container>
-        
-          <tr mat-header-row *matHeaderRowDef="displayedColumnsOneTemperature"></tr>
-          <tr mat-row *matRowDef="let row; columns: displayedColumnsOneTemperature;"></tr>
-        </table>
-        <br>
-        <button mat-raised-button color="primary" (click)="saveAll()">
-          Save
-        </button>
-      </form>
+            <ng-container matColumnDef="temperature">
+              <th mat-header-cell *matHeaderCellDef> Θερμοκρασία &gt; 60°C </th>
+              <td mat-cell *matCellDef="let element ; let i = index;">
+                <mat-form-field class="example-form-field" appearance="fill">
+                  <mat-label> Θερμοκρασία &gt; 60°C </mat-label>
+                        <mat-select
+                            name="temperature{{i}}"
+                            [(ngModel)]="element.temperature">
+                            <mat-option *ngFor="let temperature of temperatureHotsOptions" [value]="temperature">
+                              {{ temperature }} °C
+                            </mat-option>
+                          </mat-select>
+                </mat-form-field>
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="delete">
+              <th mat-header-cell *matHeaderCellDef> Διαγραφή </th>
+              <td mat-cell *matCellDef="let element ; let i = index;">
+                <button mat-mini-fab color="warn" aria-label="Example icon button with a delete icon" (click)="onDeleteHotTemperature(i)">
+                  <mat-icon>delete</mat-icon>
+                </button>
+              </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="displayedColumnsOneTemperature"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumnsOneTemperature;"></tr>
+          </table>
+          </div>
+          <mat-paginator #hotsPaginator [pageSize]="5" [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
+          <div class="action-row">
+            <button mat-raised-button color="primary" (click)="saveAll()">
+              <mat-icon>save</mat-icon> Αποθήκευση
+            </button>
+          </div>
+        </form>
       </mat-tab>
 
 
       <!-- Μαγειρεμένα -->
       <mat-tab label="Μαγειρεμένα">
         <form #myform = "ngForm">
-        <table mat-table [dataSource]="cookedData" class="mat-elevation-z8">
-          <ng-container matColumnDef="name">
-            <th mat-header-cell *matHeaderCellDef> Όνομα </th>
-            <td mat-cell *matCellDef="let element ; let i = index;" class="example-form-field"> 
-              <mat-form-field class="example-form-field" appearance="fill">
-                <mat-label> Ονομα</mat-label>
-                <input matInput type="text" 
-                            name="name{{i}}"
-                            [(ngModel)]="element.name" >
-              </mat-form-field>
-            </td>
-          </ng-container>
-        
-          <ng-container matColumnDef="temperature">
-            <th mat-header-cell *matHeaderCellDef> Θερμοκρασία > 75°C </th>
-            <td mat-cell *matCellDef="let element ; let i = index;">
-              <mat-form-field class="example-form-field" appearance="fill">
-                <mat-label> Θερμοκρασία > 75°C </mat-label>
-                      <mat-select
-                          name="temperature{{i}}"
-                          [(ngModel)]="element.temperature">
-                          <!-- Options for the dropdown -->
-                          <mat-option *ngFor="let temperature of temperatureCookedOptions" [value]="temperature">
-                            {{ temperature }} °C
-                          </mat-option>
-                        </mat-select>
-              </mat-form-field>
-            </td>
-          </ng-container>
+          <div class="table-scroll">
+          <table mat-table [dataSource]="cookedData" class="fridge-table mat-elevation-z2">
+            <ng-container matColumnDef="name">
+              <th mat-header-cell *matHeaderCellDef> Όνομα </th>
+              <td mat-cell *matCellDef="let element ; let i = index;" class="example-form-field">
+                <mat-form-field class="example-form-field" appearance="fill">
+                  <mat-label> Ονομα</mat-label>
+                  <input matInput type="text"
+                              name="name{{i}}"
+                              [(ngModel)]="element.name" >
+                </mat-form-field>
+              </td>
+            </ng-container>
 
-          <ng-container matColumnDef="delete">
-            <th mat-header-cell *matHeaderCellDef> Διαγραφή </th>       
-            <td mat-cell *matCellDef="let element ; let i = index;">          
-              <button mat-mini-fab color="warn" aria-label="Example icon button with a delete icon" (click)="onDeleteCookedTemperature(i)">
-                <mat-icon>delete</mat-icon>
-              </button>
-            </td>       
-          </ng-container>
-        
-          <tr mat-header-row *matHeaderRowDef="displayedColumnsOneTemperature"></tr>
-          <tr mat-row *matRowDef="let row; columns: displayedColumnsOneTemperature;"></tr>
-        </table>
-        <br>
-        <button mat-raised-button color="primary" (click)="saveAll()">
-          Save
-        </button>
-      </form>
+            <ng-container matColumnDef="temperature">
+              <th mat-header-cell *matHeaderCellDef> Θερμοκρασία &gt; 75°C </th>
+              <td mat-cell *matCellDef="let element ; let i = index;">
+                <mat-form-field class="example-form-field" appearance="fill">
+                  <mat-label> Θερμοκρασία &gt; 75°C </mat-label>
+                        <mat-select
+                            name="temperature{{i}}"
+                            [(ngModel)]="element.temperature">
+                            <mat-option *ngFor="let temperature of temperatureCookedOptions" [value]="temperature">
+                              {{ temperature }} °C
+                            </mat-option>
+                          </mat-select>
+                </mat-form-field>
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="delete">
+              <th mat-header-cell *matHeaderCellDef> Διαγραφή </th>
+              <td mat-cell *matCellDef="let element ; let i = index;">
+                <button mat-mini-fab color="warn" aria-label="Example icon button with a delete icon" (click)="onDeleteCookedTemperature(i)">
+                  <mat-icon>delete</mat-icon>
+                </button>
+              </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="displayedColumnsOneTemperature"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumnsOneTemperature;"></tr>
+          </table>
+          </div>
+          <mat-paginator #cookedPaginator [pageSize]="5" [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
+          <div class="action-row">
+            <button mat-raised-button color="primary" (click)="saveAll()">
+              <mat-icon>save</mat-icon> Αποθήκευση
+            </button>
+          </div>
+        </form>
       </mat-tab>
   </mat-tab-group>
 </div> 

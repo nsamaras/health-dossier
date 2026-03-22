@@ -71,7 +71,7 @@ export class SuppliersListComponent implements OnInit {
       this.supplierService.onDeleteSupplierFromProfile(supplier)
         .pipe(
           tap( () => {
-            Swal.fire('Η διαγραφή ολοκληρώθηκε', 'success');
+            Swal.fire('Η διαγραφή ολοκληρώθηκε!', 'Η εγγραφή διαγράφηκε επιτυχώς.', 'success');
           }),
           catchError(error => {
             console.log("error");

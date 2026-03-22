@@ -1,4 +1,5 @@
-import { Component, ElementRef, EventEmitter, NgZone, OnInit, Output, ViewChild } from '@angular/core';
+import { Component, ElementRef, EventEmitter, NgZone, OnInit, AfterViewInit, Output, ViewChild } from '@angular/core';
+import { MatPaginator } from '@angular/material/paginator';
 import { MatDatepickerInputEvent } from '@angular/material/datepicker';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Observable, Subject, Subscription } from 'rxjs';
@@ -38,7 +39,7 @@ import {MatButtonModule} from '@angular/material/button';
     { provide: MAT_DATE_LOCALE, useValue: 'en-GB' }
   ]
 })
-export class TemperatureComponent implements OnInit {
+export class TemperatureComponent implements OnInit, AfterViewInit {
 
   descriptionText : string = `Στο πεδίο “Αρχείο παρακολούθησης θερμοκρασιών” μπορείς να καταγράψεις/αρχειοθετήσεις/εκτυπώσεις το αρχείο τεκμηρίωσης θερμοκρασιών`;
  
@@ -50,8 +51,11 @@ export class TemperatureComponent implements OnInit {
 
   @ViewChild(MatAccordion) accordion: MatAccordion;
   @ViewChild('content') content:ElementRef;
-
   @ViewChild('f') fridgeForm: NgForm;
+  @ViewChild('fridgePaginator') fridgePaginator: MatPaginator;
+  @ViewChild('freezerPaginator') freezerPaginator: MatPaginator;
+  @ViewChild('hotsPaginator') hotsPaginator: MatPaginator;
+  @ViewChild('cookedPaginator') cookedPaginator: MatPaginator;
   displayedColumns: string[] = ['name', 'temperatureMorning', 'temperatureAfternoon', 'delete'];
   displayedColumnsOneTemperature: string[] = ['name', 'temperature', 'delete'];
   fridgeDataSource : TemperatureModel[] = []; 
@@ -85,12 +89,18 @@ export class TemperatureComponent implements OnInit {
     this.getAllTemperatures();
   }
 
+  ngAfterViewInit() {
+    if (this.fridgeData) this.fridgeData.paginator = this.fridgePaginator;
+  }
+
+
 
   getFridges() {
     this.temperatureService.getFridges()
       .subscribe(fridges => {
         this.fridgeDataSource = fridges;
         this.fridgeData = new MatTableDataSource<TemperatureModel>(fridges);
+        this.fridgeData.paginator = this.fridgePaginator;
       });
   }
 
@@ -99,6 +109,7 @@ export class TemperatureComponent implements OnInit {
       .subscribe(fridges => {
         this.fridgeDataSource = fridges;
         this.fridgeData = new MatTableDataSource<TemperatureModel>(fridges);
+        this.fridgeData.paginator = this.fridgePaginator;
       });
   }
 
@@ -107,6 +118,7 @@ export class TemperatureComponent implements OnInit {
       .subscribe(freezers => {
         this.freezerDataSource = freezers;
         this.freezerData = new MatTableDataSource<TemperatureModel>(freezers);
+        this.freezerData.paginator = this.freezerPaginator;
       });
   }
 
@@ -115,6 +127,7 @@ export class TemperatureComponent implements OnInit {
       .subscribe(freezers => {
         this.freezerDataSource = freezers;
         this.freezerData = new MatTableDataSource<TemperatureModel>(freezers);
+        this.freezerData.paginator = this.freezerPaginator;
       });
   }
 
@@ -123,6 +136,7 @@ export class TemperatureComponent implements OnInit {
       .subscribe(results => {
         this.hotsDataSource = results;
         this.hotsData = new MatTableDataSource<TemperatureModel>(results);
+        this.hotsData.paginator = this.hotsPaginator;
       });
   }
 
@@ -131,6 +145,7 @@ export class TemperatureComponent implements OnInit {
       .subscribe(results => {
         this.hotsDataSource = results;
         this.hotsData = new MatTableDataSource<TemperatureModel>(results);
+        this.hotsData.paginator = this.hotsPaginator;
       });
   }
 
@@ -147,6 +162,7 @@ export class TemperatureComponent implements OnInit {
         this.cookedDataSource = results;
         this.cookedDataSource.push(newTemp as TemperatureModel);
         this.cookedData = new MatTableDataSource<TemperatureModel>([newTemp as TemperatureModel]);
+        this.cookedData.paginator = this.cookedPaginator;
       });
   }
 
@@ -177,6 +193,7 @@ export class TemperatureComponent implements OnInit {
         this.fridgeData = [];
         this.fridgeDataSource = temps;
         this.fridgeData = new MatTableDataSource<TemperatureModel>(temps);
+        this.fridgeData.paginator = this.fridgePaginator;
       } else {
         this.getFridges();
       }
@@ -187,6 +204,7 @@ export class TemperatureComponent implements OnInit {
         if(temps.length > 0) {
           this.freezerDataSource = temps;
           this.freezerData = new MatTableDataSource<TemperatureModel>(temps);
+          this.freezerData.paginator = this.freezerPaginator;
         } else {
           this.getFreezers();
         }
@@ -197,6 +215,7 @@ export class TemperatureComponent implements OnInit {
         if(temps.length > 0) {
           this.hotsDataSource = temps;
           this.hotsData = new MatTableDataSource<TemperatureModel>(temps);
+          this.hotsData.paginator = this.hotsPaginator;
         } else {
           this.getHots();
         }
@@ -214,6 +233,7 @@ export class TemperatureComponent implements OnInit {
             };
             temps.push(extraTemp as TemperatureModel);
             this.cookedData = new MatTableDataSource<TemperatureModel>(temps);
+            this.cookedData.paginator = this.cookedPaginator;
           } else {
             this.getCooked(this.editDate);
           }
@@ -232,6 +252,7 @@ export class TemperatureComponent implements OnInit {
         this.fridgeData = [];
         this.fridgeDataSource = temps;
         this.fridgeData = new MatTableDataSource<TemperatureModel>(temps);
+        this.fridgeData.paginator = this.fridgePaginator;
       } else {
         this.getFridgesList();
       }
@@ -243,6 +264,7 @@ export class TemperatureComponent implements OnInit {
         if(temps.length > 0) {
           this.freezerDataSource = temps;
           this.freezerData = new MatTableDataSource<TemperatureModel>(temps);
+          this.freezerData.paginator = this.freezerPaginator;
         } else {
           this.getFreezersList();
         }
@@ -254,6 +276,7 @@ export class TemperatureComponent implements OnInit {
         if(temps.length > 0) {
           this.hotsDataSource = temps;
           this.hotsData = new MatTableDataSource<TemperatureModel>(temps);
+          this.hotsData.paginator = this.hotsPaginator;
         } else {
           this.getHotsList();
         }
@@ -271,6 +294,7 @@ export class TemperatureComponent implements OnInit {
           };
           temps.push(extraTemp as TemperatureModel);
           this.cookedData = new MatTableDataSource<TemperatureModel>(temps);
+          this.cookedData.paginator = this.cookedPaginator;
         } else {
           this.getCooked(date);
         }  
@@ -283,7 +307,7 @@ export class TemperatureComponent implements OnInit {
       this.temperatureService.delteTemperature(this.fridgeDataSource[index].docId, this.fridgeDataSource[index].name, "FRIDGES-BY-DATE", "FRIDGES-LIST")
     .pipe(
       tap( () => {
-        Swal.fire('Η διαγραφή ολοκληρώθηκε', 'success');
+        Swal.fire('Η διαγραφή ολοκληρώθηκε!', 'Η εγγραφή διαγράφηκε επιτυχώς.', 'success');
       }),
       catchError(error => {
         console.log("error");
@@ -295,6 +319,7 @@ export class TemperatureComponent implements OnInit {
     }
     this.fridgeDataSource.splice(index, 1);
     this.fridgeData = new MatTableDataSource<TemperatureModel>(this.fridgeDataSource);
+    this.fridgeData.paginator = this.fridgePaginator;
   }
 
   onDeleteFreezerTemperature(index: number) {
@@ -303,7 +328,7 @@ export class TemperatureComponent implements OnInit {
       this.temperatureService.delteTemperature(this.freezerDataSource[index].docId, this.freezerDataSource[index].name, "FREEZERS-BY-DATE", "FREEZERS-LIST")
       .pipe(
         tap( () => {
-          Swal.fire('Η διαγραφή ολοκληρώθηκε', 'success');
+          Swal.fire('Η διαγραφή ολοκληρώθηκε!', 'Η εγγραφή διαγράφηκε επιτυχώς.', 'success');
         }),
         catchError(error => {
           console.log("error");
@@ -323,7 +348,7 @@ export class TemperatureComponent implements OnInit {
       this.temperatureService.delteTemperature(this.cookedDataSource[index].docId, this.cookedDataSource[index].name, "COOKED-BY-DATE", "COOKED-LIST")
       .pipe(
         tap( () => {
-          Swal.fire('Η διαγραφή ολοκληρώθηκε', 'success');
+          Swal.fire('Η διαγραφή ολοκληρώθηκε!', 'Η εγγραφή διαγράφηκε επιτυχώς.', 'success');
         }),
         catchError(error => {
           alert("Could delete temperature");
@@ -342,7 +367,7 @@ export class TemperatureComponent implements OnInit {
       this.temperatureService.delteTemperature(this.hotsDataSource[index].docId, this.hotsDataSource[index].name, "HOTS-BY-DATE", "HOTS-LIST")
       .pipe(
         tap( () => {
-          Swal.fire('Η διαγραφή ολοκληρώθηκε', 'success');
+          Swal.fire('Η διαγραφή ολοκληρώθηκε!', 'Η εγγραφή διαγράφηκε επιτυχώς.', 'success');
         }),
         catchError(error => {
           alert("Could delete temperature");
@@ -515,7 +540,8 @@ export class TemperatureComponent implements OnInit {
     const dialogConfig = new MatDialogConfig();
       dialogConfig.disableClose = true;
       dialogConfig.autoFocus = true;
-      dialogConfig.minWidth = "400px";   
+      dialogConfig.minWidth = "500px";
+      dialogConfig.minHeight = "320px";
       this.dialog.open(AddRowTemperatureComponent, dialogConfig)
           .afterClosed()
           .subscribe(() => {
