@@ -93,6 +93,9 @@ export class TemperatureComponent implements OnInit, AfterViewInit {
     if (this.fridgeData) this.fridgeData.paginator = this.fridgePaginator;
   }
 
+  /** Allows mat-select to match stored string "4" with option number 4 */
+  compareTemperatureValues = (a: any, b: any) => String(a) === String(b);
+
 
 
   getFridges() {
