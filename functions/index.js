@@ -13,12 +13,62 @@
  *          Cooked    : 70.0 –  82.0 °C  (temperature)
  */
 
-const { onSchedule } = require('firebase-functions/v2/scheduler');
-const { logger }     = require('firebase-functions');
-const admin          = require('firebase-admin');
+const { onSchedule }   = require('firebase-functions/v2/scheduler');
+const { onCall, HttpsError } = require('firebase-functions/v2/https');
+const { logger }       = require('firebase-functions');
+const admin            = require('firebase-admin');
+const twilio           = require('twilio');
 
 admin.initializeApp();
 const db = admin.firestore();
+
+// ─── Twilio client (reads from .env / Firebase secret env vars) ───────────
+function getTwilioClient() {
+  const sid   = process.env.TWILIO_ACCOUNT_SID;
+  const token = process.env.TWILIO_AUTH_TOKEN;
+  if (!sid || !token) throw new Error('Twilio credentials not configured in .env');
+  return twilio(sid, token);
+}
+
+// ─── Send WhatsApp message (text + optional video/image) ─────────────────
+exports.sendWhatsAppToUser = onCall({ region: 'us-central1' }, async (request) => {
+  if (!request.auth) throw new HttpsError('unauthenticated', 'Must be logged in.');
+
+  const { userNameOrUrid, message, mediaUrl } = request.data;
+  if (!userNameOrUrid || !message) {
+    throw new HttpsError('invalid-argument', 'userNameOrUrid and message are required.');
+  }
+
+  // Find user in Firestore
+  let userDoc = null;
+  const byUrid = await db.collection('users').where('urid', '==', userNameOrUrid).get();
+  if (!byUrid.empty) {
+    userDoc = byUrid.docs[0].data();
+  } else {
+    const byName = await db.collection('users')
+      .where('name', '==', userNameOrUrid).get();
+    if (!byName.empty) userDoc = byName.docs[0].data();
+  }
+
+  if (!userDoc) throw new HttpsError('not-found', `User "${userNameOrUrid}" not found.`);
+  if (!userDoc.phoneNumber) {
+    throw new HttpsError('failed-precondition', `User "${userDoc.name}" has no phone number.`);
+  }
+
+  const payload = {
+    from : 'whatsapp:' + process.env.TWILIO_WHATSAPP_FROM,
+    to   : 'whatsapp:' + userDoc.phoneNumber,
+    body : message,
+  };
+  if (mediaUrl) payload.mediaUrl = [mediaUrl];
+
+  const client = getTwilioClient();
+  const result = await client.messages.create(payload);
+
+  logger.info('WhatsApp sent to ' + userDoc.name + ' (' + userDoc.phoneNumber + ')' +
+    (mediaUrl ? ' [+media]' : '') + ': ' + result.sid);
+  return { success: true, sid: result.sid, to: userDoc.phoneNumber };
+});
 
 // ─── Temperature generators ────────────────────────────────────────────────
 const rand = (min, max) => Math.round((Math.random() * (max - min) + min) * 10) / 10;

@@ -13,12 +13,11 @@ firebase-debug.*.log
 functions/node_modules/
 functions/lib/
 functions/.env
-functions/.env.*   # environment-specific
+functions/.env.*
 functions/scripts/*.json
 functions/scripts/node_modules/
 functions/scripts/package-lock.json
 functions/scripts/logs/
-functions/package-lock.json
 *.env.local
 *.local
 
