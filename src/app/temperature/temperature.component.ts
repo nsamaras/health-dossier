@@ -248,8 +248,8 @@ export class TemperatureComponent implements OnInit, AfterViewInit {
     this.freezerData =  [];
     this.hotsData = [];
     this.cookedData=  [];
-    // this.temperatureService.getFridgesByDate(date)
-    this.temperatureService.getCombinedFridges(date)
+    this.temperatureService.getFridgesByDate(date)
+//     this.temperatureService.getCombinedFridges(date)
     .subscribe(temps => {
       if(temps.length > 0) {
         this.fridgeData = [];
@@ -305,12 +305,13 @@ export class TemperatureComponent implements OnInit, AfterViewInit {
   }
 
   onDeleteFridgeTemperature(index: number) {
+    const name = this.fridgeDataSource[index].name;
     if(this.fridgeDataSource[index].id !== null ||
         this.fridgeDataSource[index].id !== undefined) {
-      this.temperatureService.delteTemperature(this.fridgeDataSource[index].docId, this.fridgeDataSource[index].name, "FRIDGES-BY-DATE", "FRIDGES-LIST")
+      this.temperatureService.delteTemperature(this.fridgeDataSource[index].docId, name, "FRIDGES-BY-DATE", "FRIDGES-LIST")
     .pipe(
       tap( () => {
-        Swal.fire('Η διαγραφή ολοκληρώθηκε!', 'Η εγγραφή διαγράφηκε επιτυχώς.', 'success');
+        Swal.fire('Η διαγραφή ολοκληρώθηκε!', `Το ψυγείο "${name}" διαγράφηκε επιτυχώς.`, 'success');
       }),
       catchError(error => {
         console.log("error");
@@ -326,12 +327,13 @@ export class TemperatureComponent implements OnInit, AfterViewInit {
   }
 
   onDeleteFreezerTemperature(index: number) {
+    const name = this.freezerDataSource[index].name;
     if(this.freezerDataSource[index].id !== null ||
       this.freezerDataSource[index].id !== undefined) {
-      this.temperatureService.delteTemperature(this.freezerDataSource[index].docId, this.freezerDataSource[index].name, "FREEZERS-BY-DATE", "FREEZERS-LIST")
+      this.temperatureService.delteTemperature(this.freezerDataSource[index].docId, name, "FREEZERS-BY-DATE", "FREEZERS-LIST")
       .pipe(
         tap( () => {
-          Swal.fire('Η διαγραφή ολοκληρώθηκε!', 'Η εγγραφή διαγράφηκε επιτυχώς.', 'success');
+          Swal.fire('Η διαγραφή ολοκληρώθηκε!', `Η κατάψυξη "${name}" διαγράφηκε επιτυχώς.`, 'success');
         }),
         catchError(error => {
           console.log("error");
@@ -346,12 +348,13 @@ export class TemperatureComponent implements OnInit, AfterViewInit {
   }
 
   onDeleteCookedTemperature(index: number) {
+    const name = this.cookedDataSource[index].name;
     if(this.cookedDataSource[index].id !== null ||
       this.cookedDataSource[index].id !== undefined) {
-      this.temperatureService.delteTemperature(this.cookedDataSource[index].docId, this.cookedDataSource[index].name, "COOKED-BY-DATE", "COOKED-LIST")
+      this.temperatureService.delteTemperature(this.cookedDataSource[index].docId, name, "COOKED-BY-DATE", "COOKED-LIST")
       .pipe(
         tap( () => {
-          Swal.fire('Η διαγραφή ολοκληρώθηκε!', 'Η εγγραφή διαγράφηκε επιτυχώς.', 'success');
+          Swal.fire('Η διαγραφή ολοκληρώθηκε!', `Το μαγειρευμένο "${name}" διαγράφηκε επιτυχώς.`, 'success');
         }),
         catchError(error => {
           alert("Could delete temperature");
@@ -365,12 +368,13 @@ export class TemperatureComponent implements OnInit, AfterViewInit {
   }
 
   onDeleteHotTemperature(index: number) {
+    const name = this.hotsDataSource[index].name;
     if(this.hotsDataSource[index].id !== null ||
       this.hotsDataSource[index].id !== undefined) {
-      this.temperatureService.delteTemperature(this.hotsDataSource[index].docId, this.hotsDataSource[index].name, "HOTS-BY-DATE", "HOTS-LIST")
+      this.temperatureService.delteTemperature(this.hotsDataSource[index].docId, name, "HOTS-BY-DATE", "HOTS-LIST")
       .pipe(
         tap( () => {
-          Swal.fire('Η διαγραφή ολοκληρώθηκε!', 'Η εγγραφή διαγράφηκε επιτυχώς.', 'success');
+          Swal.fire('Η διαγραφή ολοκληρώθηκε!', `Το ζεστό "${name}" διαγράφηκε επιτυχώς.`, 'success');
         }),
         catchError(error => {
           alert("Could delete temperature");

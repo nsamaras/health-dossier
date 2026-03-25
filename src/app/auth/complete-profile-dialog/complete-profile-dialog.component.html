@@ -1,0 +1,41 @@
+<h2 mat-dialog-title>Συμπλήρωση Προφίλ</h2>
+
+<mat-dialog-content>
+  <p>Παρακαλώ συμπληρώστε τα παρακάτω στοιχεία για να ολοκληρώσετε την εγγραφή σας.</p>
+
+  <form [formGroup]="form">
+
+      <mat-form-field appearance="outline" style="width: 100%;">
+        <mat-label>Κινητό τηλέφωνο</mat-label>
+        <mat-icon matPrefix>phone</mat-icon>
+        <input matInput formControlName="phoneNumber" placeholder="6900000000">
+        <mat-error *ngIf="form.get('phoneNumber').hasError('required')">
+          Το τηλέφωνο είναι υποχρεωτικό
+        </mat-error>
+        <mat-error *ngIf="form.get('phoneNumber').hasError('pattern')">
+          Μη έγκυρος αριθμός (π.χ. 6900000000)
+        </mat-error>
+      </mat-form-field>
+
+    <mat-form-field appearance="outline" style="width: 100%; margin-top: 10px;">
+      <mat-label>ΑΦΜ</mat-label>
+      <input matInput formControlName="vat" placeholder="123456789">
+      <mat-icon matPrefix>badge</mat-icon>
+      <mat-error *ngIf="form.get('vat').hasError('required')">
+        Το ΑΦΜ είναι υποχρεωτικό
+      </mat-error>
+      <mat-error *ngIf="form.get('vat').hasError('pattern')">
+        Το ΑΦΜ πρέπει να αποτελείται από 9 ψηφία
+      </mat-error>
+    </mat-form-field>
+
+  </form>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button (click)="skip()">Παράλειψη</button>
+  <button mat-raised-button color="primary" (click)="save()" [disabled]="form.invalid">
+    <mat-icon>save</mat-icon> Αποθήκευση
+  </button>
+</mat-dialog-actions>
+
