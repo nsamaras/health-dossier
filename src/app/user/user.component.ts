@@ -1,10 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import {FormBuilder, FormGroup, Validators} from '@angular/forms';
-import {Router} from '@angular/router';
+import { FormBuilder, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
 import { UserService } from '../services/user.service';
 import { MatDialogRef } from '@angular/material/dialog';
-import {AngularFirestore} from '@angular/fire/compat/firestore';
-import { UserModel } from '../auth/user.model';
+import { AngularFirestore } from '@angular/fire/compat/firestore';
 
 @Component({
   selector: 'app-user',
@@ -13,33 +12,32 @@ import { UserModel } from '../auth/user.model';
 })
 export class UserComponent implements OnInit {
 
-  constructor(private fb: FormBuilder,
+  form = this.fb.group({
+    name:        [this.userService.user?.name  ?? '', Validators.required],
+    email:       [this.userService.user?.email ?? '', Validators.required],
+    phoneNumber: [(this.userService.user?.phoneNumber ?? '').replace(/^\+30/, ''), Validators.pattern(/^69[0-9]{8}$/)],
+    vat:         [this.userService.user?.vat   ?? '', Validators.pattern(/^[0-9]{9}$/)]
+  });
+
+  constructor(
+    private fb: FormBuilder,
     private router: Router,
     private userService: UserService,
     private dialogRef: MatDialogRef<UserComponent>,
-    private afs: AngularFirestore) { }
+    private afs: AngularFirestore
+  ) {}
 
-  ngOnInit(): void {
-  }
-
-  maxDate = new Date();
-  
-  form = this.fb.group({
-    name: [this.userService.user.name, Validators.required],
-    email: [this.userService.user.email, Validators.required],
-    password: ['', Validators.required],
-    confirm_password: ['', Validators.required]
-  });
-
- 
+  ngOnInit(): void {}
 
   close() {
     this.dialogRef.close();
   }
 
   save() {
-    this.userService.updateUserProfile2(this.form.value.email, this.form.value.name);
+    if (this.form.invalid) return;
+    const { name, email, phoneNumber, vat } = this.form.value;
+    const phoneForDb = phoneNumber ? '+30' + phoneNumber : '';
+    this.userService.updateUserProfileFull(email, name, phoneForDb, vat);
     this.dialogRef.close();
   }
-
 }

@@ -81,7 +81,9 @@ export class UserService {
                         email: userCredential.email,
                         name: userCredential.displayName,                        
                         isActive: false,
-                        isAdmin: false
+                        isAdmin: false,
+                        phoneNumber: '',
+                        vat: ''
                     }
                     this.saveUser(newUser)
                         .pipe(
@@ -103,7 +105,7 @@ export class UserService {
                       .subscribe();
                  
                 } else {
-                    this.user = new UserModel(result[0].urid, result[0].email, result[0].name, result[0].isActive, result[0].isAdmin);      
+                    this.user = new UserModel(result[0].urid, result[0].email, result[0].name, result[0].isActive, result[0].isAdmin, result[0].phoneNumber, result[0].vat);
                     this.loginMessage = ' Γεία σου ' + result[0].name;
                     this.isActiveUser$.next(result[0].isActive);
                     this.isAdminUser$.next(result[0].isAdmin);
@@ -244,4 +246,31 @@ export class UserService {
     getUsers(): Observable<any[]> {
         return this.db.collection('users', ref => ref.orderBy('email')).valueChanges();
       }
+
+    updateUserFieldsSilent(urid: string, phoneNumber: string, vat: string): Promise<void> {
+        return this.db.collection('users').doc(urid).update({ phoneNumber, vat });
+    }
+
+    async updateUserProfileFull(email: string, name: string, phoneNumber: string, vat: string) {
+        try {
+            const user = await this.afAuth.currentUser;
+            if (!user) throw new Error('No user logged in');
+
+            await user.updateEmail(email);
+
+            await this.db.collection('users').doc(this.user.urid).update({
+                email, name, phoneNumber, vat
+            });
+
+            // Keep in-memory model in sync
+            this.user.email       = email;
+            this.user.name        = name;
+            this.user.phoneNumber = phoneNumber;
+            this.user.vat         = vat;
+
+            Swal.fire({ text: 'Ο χρήστης ανανεώθηκε με επιτυχία!', icon: 'success', confirmButtonText: 'OK' });
+        } catch (error: any) {
+            Swal.fire({ title: 'Σφάλμα', text: `Αποτυχία ενημέρωσης: ${error.message || error}`, icon: 'error', confirmButtonText: 'Προσπάθησε ξανά' });
+        }
+    }
 }

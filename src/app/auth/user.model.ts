@@ -8,11 +8,15 @@ export class UserModel {
     // public role: UserRoles;
     public isActive: boolean;
     public isAdmin: boolean;
-    constructor(urid:string, email: string, name: string, isActive?: boolean, isAdmin?: boolean) {
+    public phoneNumber: string;
+    public vat: string;
+    constructor(urid: string, email: string, name: string, isActive?: boolean, isAdmin?: boolean, phoneNumber?: string, vat?: string) {
         this.urid = urid;
         this.email = email;
         this.name = name;
         this.isActive = isActive;
         this.isAdmin = isAdmin;
+        this.phoneNumber = phoneNumber || '';
+        this.vat = vat || '';
     }
 }

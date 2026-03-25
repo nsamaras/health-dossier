@@ -83,6 +83,7 @@ import { CleaningFileDetailsComponent } from './cleaning-disinfection/cleaning-f
 import { AllergenicComponent } from './allergenic/allergenic.component';
 import { SupplierEvaluationComponent } from './suppliers/supplier-evaluation/supplier-evaluation.component';
 import { AdminDashboardComponent } from './admin-dashboard/admin-dashboard.component';
+import { CompleteProfileDialogComponent } from './auth/complete-profile-dialog/complete-profile-dialog.component';
 
 
 @NgModule({
@@ -126,6 +127,7 @@ import { AdminDashboardComponent } from './admin-dashboard/admin-dashboard.compo
     AllergenicComponent,
     SupplierEvaluationComponent,
     AdminDashboardComponent,
+    CompleteProfileDialogComponent,
   ],
   imports: [
     BrowserModule,

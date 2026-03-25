@@ -50,7 +50,9 @@ export class AdminDashboardComponent implements OnInit {
         email: this.selectedUser.email,
         name: this.selectedUser.name,                        
         isActive: Boolean(this.updatedStatus),
-        isAdmin: false
+        isAdmin: false,
+        phoneNumber: this.selectedUser.phoneNumber || '',
+        vat: this.selectedUser.vat || ''
     }
     if(this.updatedStatus === true || this.updatedStatus === "true") {
       updateUser.isActive =  true;
