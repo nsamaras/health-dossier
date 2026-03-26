@@ -7,7 +7,8 @@ export class FileUpload {
     subCategory: number;
     urid: string;
     category: string;
-  
+    expiryDate?: Date;
+
     constructor(file: File) {
       this.file = file;
     }

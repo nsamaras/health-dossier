@@ -11,6 +11,16 @@
     <td mat-cell *matCellDef="let element"> {{element.name}} </td>
   </ng-container>
 
+  <ng-container matColumnDef="expiryDate">
+    <th mat-header-cell *matHeaderCellDef> Ημερομηνία λήξης </th>
+    <td mat-cell *matCellDef="let element">
+      <span *ngIf="toDate(element.expiryDate) as d; else noDate">
+        {{ d | date:'dd/MM/yyyy' }}
+      </span>
+      <ng-template #noDate>—</ng-template>
+    </td>
+  </ng-container>
+
    <ng-container matColumnDef="download">
     <th mat-header-cell *matHeaderCellDef> Download </th>       
     <td mat-cell *matCellDef="let element ; let i = index;">          

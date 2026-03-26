@@ -1,12 +1,11 @@
-import { Component, Input, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { MatTabChangeEvent } from '@angular/material/tabs';
+import { MatDialog } from '@angular/material/dialog';
 import { Subscription } from 'rxjs';
-import { BusinessFile } from 'src/app/business/business-file.model';
-import { UploadListComponent } from 'src/app/file-upload/upload-list/upload-list.component';
-import { BusinessService } from 'src/app/services/business.service';
 import { FileUploadService } from 'src/app/services/file-upload.service';
 import { StaffService } from 'src/app/services/staff.service';
 import { StaffFile } from '../staff-file.model';
+import { UploadCertDialogComponent } from 'src/app/file-upload/upload-cert-dialog/upload-cert-dialog.component';
 
 @Component({
   selector: 'app-staff-files',
@@ -15,32 +14,46 @@ import { StaffFile } from '../staff-file.model';
 })
 export class StaffFilesComponent implements OnInit {
 
-  descriptionText : string = `Στο πεδίο “Aρχεία προσωπικού” μπορείς να βρεις/προσθέσεις τα εξής:`;
-  items: string[] = ['Λίστα προσωπικού', 
-                        'Πιστοποιητικά υγείας', 
-                        'Εκπαιδεύσεις προσωπικού', 
-                        'Σημάνσεις '];
-                        
-  menu: StaffFile []  = [];
+  descriptionText: string = `Στο πεδίο "Aρχεία προσωπικού" μπορείς να βρεις/προσθέσεις τα εξής:`;
+  items: string[] = ['Λίστα προσωπικού', 'Πιστοποιητικά υγείας', 'Εκπαιδεύσεις προσωπικού', 'Σημάνσεις'];
+
+  menu: StaffFile[] = [];
   subscription: Subscription;
 
-  constructor( private service: StaffService,                
-                private fileUploadService: FileUploadService) { }
+  constructor(
+    private service: StaffService,
+    private fileUploadService: FileUploadService,
+    private dialog: MatDialog
+  ) {}
 
   ngOnInit(): void {
     this.fetchFiles();
   }
-  
-  fetchFiles() {
-        this.service.loadByCategory('staff-files').subscribe(headers => {              
-            this.service.loadHeadersByMenuId(headers [0].id).subscribe(menu => {
-            this.menu = menu;
-            });
-        });
-    }
 
-    public tabChanged(tabChangeEvent: MatTabChangeEvent): void {
-        this.fileUploadService.setMenuCategoryAndSubCategory(tabChangeEvent.index, 'staff-files');
-        this.fileUploadService.getFilesByCategory('staff-files'); 
-    }
+  fetchFiles() {
+    this.service.loadByCategory('staff-files').subscribe(headers => {
+      this.service.loadHeadersByMenuId(headers[0].id).subscribe(menu => {
+        this.menu = menu;
+        if (menu.length > 0) {
+          this.service.selectedTabTitle$.next(menu[0].title || '');
+          this.fileUploadService.setMenuCategoryAndSubCategory(0, 'staff-files');
+          this.fileUploadService.getFilesByCategory('staff-files');
+        }
+      });
+    });
+  }
+
+  public tabChanged(tabChangeEvent: MatTabChangeEvent): void {
+    const title = this.menu[tabChangeEvent.index]?.title || '';
+    this.service.selectedTabTitle$.next(title);
+    this.fileUploadService.setMenuCategoryAndSubCategory(tabChangeEvent.index, 'staff-files');
+    this.fileUploadService.getFilesByCategory('staff-files');
+  }
+
+  openUploadDialog(): void {
+    this.dialog.open(UploadCertDialogComponent, {
+      width: '480px',
+      disableClose: false
+    });
+  }
 }

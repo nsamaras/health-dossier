@@ -1,44 +1,57 @@
 import { Injectable } from "@angular/core";
 import { AngularFirestore } from "@angular/fire/compat/firestore";
-import { Observable, Subject } from "rxjs";
+import { BehaviorSubject, Observable, Subject } from "rxjs";
 import { map } from "rxjs/operators";
-import { BusinessFile } from "../business/business-file.model";
 import { Menu } from "../model/menu";
 import { StaffFile } from "../staff/staff-file.model";
 import { convertSnaps } from "./db-utils";
+import firebase from 'firebase/compat/app';
+import Timestamp = firebase.firestore.Timestamp;
 
-@Injectable({
-  providedIn: "root"
-})
+@Injectable({ providedIn: "root" })
 export class StaffService {
-  
-  filesChanged = new Subject<StaffFile[]>();    
-  private files: StaffFile []  = [];
-  fileSelected = new Subject<StaffFile>();
 
-  constructor(private db: AngularFirestore) { }
+  filesChanged  = new Subject<StaffFile[]>();
+  fileSelected  = new Subject<StaffFile>();
+  private files: StaffFile[] = [];
 
-  getBusinessFiles() {
-      return this.files.slice(); 
-  }
+  /** Tracks the title of the currently active staff tab */
+  selectedTabTitle$ = new BehaviorSubject<string>('');
 
-  loadByCategory(category: string): Observable <Menu[]> {
-      return this.db.collection("menu",
-                   ref => ref.where("category", "==", category) 
-                   .orderBy("seqNo"))
-                   .get()
-                   .pipe(
-                       map(result => convertSnaps<Menu>(result))
-                   );
+  constructor(private db: AngularFirestore) {}
+
+  getBusinessFiles() { return this.files.slice(); }
+
+  loadByCategory(category: string): Observable<Menu[]> {
+    return this.db.collection("menu",
+      ref => ref.where("category", "==", category).orderBy("seqNo"))
+      .get()
+      .pipe(map(result => convertSnaps<Menu>(result)));
   }
 
   loadHeadersByMenuId(id: any) {
-          return this.db.collection(               
-              '/menu/'+id+'/headers',
-              ref => ref.orderBy("seqNo"))
-              .get()
-              .pipe(
-                  map(result => convertSnaps<StaffFile>(result))
-              );
+    return this.db.collection('/menu/' + id + '/headers',
+      ref => ref.orderBy("seqNo"))
+      .get()
+      .pipe(map(result => convertSnaps<StaffFile>(result)));
+  }
+
+  saveHealthCertExpiry(urid: string, expiryDate: Date): Promise<void> {
+    return this.db.collection('staff-certifications').doc(urid).set(
+      { healthCertExpiryDate: Timestamp.fromDate(expiryDate) },
+      { merge: true }
+    );
+  }
+
+  loadHealthCertExpiry(urid: string): Observable<Date | null> {
+    return this.db.collection('staff-certifications').doc(urid).get().pipe(
+      map(doc => {
+        if (!doc.exists) return null;
+        const data = doc.data() as any;
+        return data?.healthCertExpiryDate
+          ? (data.healthCertExpiryDate as Timestamp).toDate()
+          : null;
+      })
+    );
   }
 }

@@ -52,14 +52,40 @@ export class FileUploadService {
     return uploadTask.percentageChanges();
   }
 
+  pushFileToStorageWithDate(fileUpload: FileUpload, expiryDate: Date): Observable<number> {
+    fileUpload.expiryDate = expiryDate;
+    this.basePath = '/uploads/' + this.userService.getUserId() + '/' + this.category + '/' + this.subCategory;
+    const filePath = `${this.basePath}/${fileUpload.file.name}`;
+    const storageRef = this.storage.ref(filePath);
+    const uploadTask = this.storage.upload(filePath, fileUpload.file);
+    uploadTask.snapshotChanges().pipe(
+      finalize(() => {
+        storageRef.getDownloadURL().subscribe(downloadURL => {
+          fileUpload.url      = downloadURL;
+          fileUpload.name     = fileUpload.file.name;
+          fileUpload.subCategory = this.subCategory;
+          fileUpload.urid     = this.userService.getUserId();
+          fileUpload.category = this.category;
+          this.saveFileData(fileUpload);
+          this.getFiles();
+        });
+      })
+    ).subscribe();
+    return uploadTask.percentageChanges();
+  }
+
   private saveFileData(fileUpload: FileUpload): void {
-        this.db.collection('uploads').add({
+        const data: any = {
           name: fileUpload.name,
           url: fileUpload.url,
           urid: fileUpload.urid,
           category: fileUpload.category,
           subCategory: fileUpload.subCategory
-        });
+        };
+        if (fileUpload.expiryDate) {
+          data.expiryDate = fileUpload.expiryDate;
+        }
+        this.db.collection('uploads').add(data);
   }
 
   removeId(data: any) {
