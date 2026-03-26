@@ -3,7 +3,7 @@
  *
  * Finds all FRIDGES-BY-DATE records for a given user where temperatureMorning
  * or temperatureAfternoon are empty ('', null, undefined) and fills them with
- * a random value between 0 and 6 (1 decimal place).
+ * a random integer value matching the UI select options (0–6 for fridges, -18 to -23 for freezers).
  *
  * Usage:
  *   node fill-empty-fridges.js <service-account.json> [userName|email|urid] [startDate] [endDate]
@@ -35,9 +35,14 @@ const db = admin.firestore();
 const SLOT_COLLECTIONS    = ['FRIDGES-BY-DATE', 'FREEZERS-BY-DATE'];
 const NONSLOT_COLLECTIONS = ['HOTS-BY-DATE', 'COOKED-BY-DATE'];
 
-function randomTemp() {
-  // Random float between 0.0 and 6.0 with 1 decimal place
-  return Math.round(Math.random() * 60) / 10;
+// Must match exactly the mat-select options in the Angular UI
+const FRIDGE_OPTIONS  = [0, 1, 2, 3, 4, 5, 6];
+const FREEZER_OPTIONS = [-18, -19, -20, -21, -22, -23];
+const pickOption = (options) => options[Math.floor(Math.random() * options.length)];
+
+function randomTemp(collectionName) {
+  if (collectionName && collectionName.startsWith('FREEZER')) return pickOption(FREEZER_OPTIONS);
+  return pickOption(FRIDGE_OPTIONS);
 }
 
 async function findUserByNameOrEmail(nameOrEmail) {
@@ -89,14 +94,14 @@ async function fillCollection(urid, collectionName, slotBased) {
     const updates = {};
     if (slotBased) {
       if (data.temperatureMorning === '' || data.temperatureMorning === undefined || data.temperatureMorning === null) {
-        updates.temperatureMorning = randomTemp();
+        updates.temperatureMorning = randomTemp(collectionName);
       }
       if (data.temperatureAfternoon === '' || data.temperatureAfternoon === undefined || data.temperatureAfternoon === null) {
-        updates.temperatureAfternoon = randomTemp();
+        updates.temperatureAfternoon = randomTemp(collectionName);
       }
     } else {
       if (data.temperature === '' || data.temperature === undefined || data.temperature === null) {
-        updates.temperature = randomTemp();
+        updates.temperature = randomTemp(collectionName);
       }
     }
 
@@ -119,7 +124,7 @@ async function fillCollection(urid, collectionName, slotBased) {
 async function main() {
   console.log('===================================================');
   console.log('  Fill Empty Fridge Temperatures Script');
-  console.log('  Range: 0.0°C  to  6.0°C');
+  console.log('  Fridges: 0–6°C (integers) | Freezers: -18 to -23°C (integers)');
   console.log('===================================================');
   console.log('  User  : ' + (USER_ARG || 'ALL'));
   if (START_DATE) console.log('  From  : ' + START_DATE.toDateString());

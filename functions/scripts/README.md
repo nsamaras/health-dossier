@@ -26,6 +26,8 @@ cd "C:\Users\samarasn\workspace\health-dossier\health-dossier\functions\scripts"
 Creates **empty placeholder records** in Firestore for dates where a user has not logged temperatures.
 Must be run **before** the fill scripts.
 
+Supports an optional `type` argument to target a **specific category** only.
+
 | Category | Fields created |
 |---|---|
 | Fridges | `temperatureMorning: ''`, `temperatureAfternoon: ''` |
@@ -35,8 +37,26 @@ Must be run **before** the fill scripts.
 
 **Usage:**
 ```powershell
-# By name
-node backfill-temperatures.js ./health-dossier-9c4e24879fde.json student 2026-03-01 2026-03-23
+node backfill-temperatures.js <service-account.json> [userName|email] [startDate] [endDate] [type]
+```
+
+`type` is optional: `fridges` | `freezers` | `hots` | `cooked` | `all` (default: `all`)
+
+```powershell
+# All categories
+node backfill-temperatures.js ./health-dossier-9c4e24879fde.json student 2026-03-24 2026-03-24
+
+# Fridges only
+node backfill-temperatures.js ./health-dossier-9c4e24879fde.json student 2026-03-24 2026-03-24 fridges
+
+# Freezers only
+node backfill-temperatures.js ./health-dossier-9c4e24879fde.json student 2026-03-24 2026-03-24 freezers
+
+# Hots only
+node backfill-temperatures.js ./health-dossier-9c4e24879fde.json student 2026-03-24 2026-03-24 hots
+
+# Cooked only
+node backfill-temperatures.js ./health-dossier-9c4e24879fde.json student 2026-03-24 2026-03-24 cooked
 
 # By email
 node backfill-temperatures.js ./health-dossier-9c4e24879fde.json student@student.gr 2026-03-01 2026-03-23
@@ -48,12 +68,15 @@ node backfill-temperatures.js ./health-dossier-9c4e24879fde.json
 ---
 
 ### 2. `fill-empty-fridges.js`
-Fills **empty fridge temperature records** with random realistic values.
+Fills **empty fridge AND freezer temperature records** with random integer values matching the UI select options.
 
-- **Range:** `0.0°C` to `6.0°C`
+- **Fridges:** integer from `[0, 1, 2, 3, 4, 5, 6]` °C
+- **Freezers:** integer from `[-18, -19, -20, -21, -22, -23]` °C
 - **Fields:** `temperatureMorning`, `temperatureAfternoon`
-- **Collection:** `FRIDGES-BY-DATE`
+- **Collections:** `FRIDGES-BY-DATE` **and** `FREEZERS-BY-DATE`
 - Safe to re-run — already filled records are **not touched**
+
+> ℹ️ This script covers **both fridges and freezers** — no need to run `fill-empty-freezers.js` separately.
 
 **Usage:**
 ```powershell
@@ -70,23 +93,18 @@ node fill-empty-fridges.js ./health-dossier-9c4e24879fde.json
 ---
 
 ### 3. `fill-empty-freezers.js`
-Fills **empty freezer temperature records** with random realistic values.
+Fills **empty freezer temperature records** with random integer values.
 
-- **Range:** `-25.0°C` to `-18.0°C`
+- **Options:** `-18, -19, -20, -21, -22, -23` °C
 - **Fields:** `temperatureMorning`, `temperatureAfternoon`
 - **Collection:** `FREEZERS-BY-DATE`
 - Safe to re-run — already filled records are **not touched**
 
+> ⚠️ `fill-empty-fridges.js` already covers freezers — this script is only needed if you want to fill freezers **without** touching fridges.
+
 **Usage:**
 ```powershell
-# By name
 node fill-empty-freezers.js ./health-dossier-9c4e24879fde.json student 2026-03-01 2026-03-23
-
-# By email
-node fill-empty-freezers.js ./health-dossier-9c4e24879fde.json student@student.gr 2026-03-01 2026-03-23
-
-# All users
-node fill-empty-freezers.js ./health-dossier-9c4e24879fde.json
 ```
 
 ---
@@ -101,14 +119,7 @@ Fills **empty hot-holding temperature records** with random realistic values.
 
 **Usage:**
 ```powershell
-# By name
 node fill-empty-hots.js ./health-dossier-9c4e24879fde.json student 2026-03-01 2026-03-23
-
-# By email
-node fill-empty-hots.js ./health-dossier-9c4e24879fde.json student@student.gr 2026-03-01 2026-03-23
-
-# All users
-node fill-empty-hots.js ./health-dossier-9c4e24879fde.json
 ```
 
 ---
@@ -188,16 +199,11 @@ node query-by-date.js <service-account.json> <collectionPath> <date DD/MM/YYYY> 
 
 **Examples:**
 ```powershell
-# Query FREEZERS-BY-DATE for a specific date and user
-node query-by-date.js ./health-dossier-9c4e24879fde.json \
-  "temperatures/WNsdw7QThbXtNcWGo33YB4P9p2V2/FREEZERS-BY-DATE" \
-  "22/03/2026" \
-  "WNsdw7QThbXtNcWGo33YB4P9p2V2"
+# Query FRIDGES-BY-DATE for a specific user on a specific date
+node query-by-date.js ./health-dossier-9c4e24879fde.json "temperatures/WNsdw7QThbXtNcWGo33YB4P9p2V2/FRIDGES-BY-DATE" "24/03/2026" "WNsdw7QThbXtNcWGo33YB4P9p2V2"
 
-# Query FRIDGES-BY-DATE (no urid filter)
-node query-by-date.js ./health-dossier-9c4e24879fde.json \
-  "temperatures/WNsdw7QThbXtNcWGo33YB4P9p2V2/FRIDGES-BY-DATE" \
-  "22/03/2026"
+# Query FREEZERS-BY-DATE
+node query-by-date.js ./health-dossier-9c4e24879fde.json "temperatures/WNsdw7QThbXtNcWGo33YB4P9p2V2/FREEZERS-BY-DATE" "24/03/2026" "WNsdw7QThbXtNcWGo33YB4P9p2V2"
 ```
 
 ---
@@ -208,14 +214,6 @@ Copies **all fields** from one Firestore document to another.
 **Usage:**
 ```powershell
 node copy-document.js <service-account.json> <sourcePath> <destPath> [--merge]
-```
-
-**Examples:**
-```powershell
-# Copy (overwrite destination)
-
-# Copy and merge (keep existing destination fields)
-node copy-document.js ./health-dossier-9c4e24879fde.json "users/abc123" "users/xyz789" --merge
 ```
 
 | Mode | Behaviour |
@@ -236,40 +234,64 @@ node copy-collection.js <service-account.json> <sourcePath> <destPath> [--merge]
 **Examples:**
 ```powershell
 # Copy FRIDGES → FRIDGES-LIST
-node copy-collection.js ./health-dossier-9c4e24879fde.json \
-  "temperatures/WNsdw7QThbXtNcWGo33YB4P9p2V2/FRIDGES" \
-  "temperatures/WNsdw7QThbXtNcWGo33YB4P9p2V2/FRIDGES-LIST"
+node copy-collection.js ./health-dossier-9c4e24879fde.json "temperatures/WNsdw7QThbXtNcWGo33YB4P9p2V2/FRIDGES" "temperatures/WNsdw7QThbXtNcWGo33YB4P9p2V2/FRIDGES-LIST"
 
 # Copy FREEZERS → FREEZERS-LIST
-node copy-collection.js ./health-dossier-9c4e24879fde.json \
-  "temperatures/WNsdw7QThbXtNcWGo33YB4P9p2V2/FREEZERS" \
-  "temperatures/WNsdw7QThbXtNcWGo33YB4P9p2V2/FREEZERS-LIST"
+node copy-collection.js ./health-dossier-9c4e24879fde.json "temperatures/WNsdw7QThbXtNcWGo33YB4P9p2V2/FREEZERS" "temperatures/WNsdw7QThbXtNcWGo33YB4P9p2V2/FREEZERS-LIST"
+```
 
-# Copy and merge
-node copy-collection.js ./health-dossier-9c4e24879fde.json \
-  "temperatures/userId/FRIDGES" \
-  "temperatures/userId/FRIDGES-LIST" --merge
+---
+
+### 11. `run-daily-temperature-fill.js`
+Manual test runner for the `dailyTemperatureFill` Cloud Function.
+Processes only the **student user** (`WNsdw7QThbXtNcWGo33YB4P9p2V2`) for fridges and freezers.
+
+**Usage:**
+```powershell
+# Run for today
+node run-daily-temperature-fill.js ./health-dossier-9c4e24879fde.json
+
+# Run for a specific date
+node run-daily-temperature-fill.js ./health-dossier-9c4e24879fde.json 2026-03-26
 ```
 
 ---
 
 ## Normal workflow for backfilling temperatures
 
-Run these in order:
-
+### Fridges + Freezers only (2 steps)
 ```powershell
-# Step 1 — Create empty records
-node backfill-temperatures.js ./health-dossier-9c4e24879fde.json student 2026-03-01 2026-03-23
+# Step 1 — Create empty records (fridges + freezers)
+node backfill-temperatures.js ./health-dossier-9c4e24879fde.json student 2026-03-24 2026-03-24 fridges
+node backfill-temperatures.js ./health-dossier-9c4e24879fde.json student 2026-03-24 2026-03-24 freezers
 
-# Step 2 — Fill fridges (0°C to 6°C)
-node fill-empty-fridges.js ./health-dossier-9c4e24879fde.json student 2026-03-01 2026-03-23
-
-# Step 3 — Fill freezers (-25°C to -18°C)
-node fill-empty-freezers.js ./health-dossier-9c4e24879fde.json student 2026-03-01 2026-03-23
-
-# Step 4 — Fill hots (63°C to 85°C)
-node fill-empty-hots.js ./health-dossier-9c4e24879fde.json student 2026-03-01 2026-03-23
+# Step 2 — Fill values for both fridges AND freezers
+node fill-empty-fridges.js ./health-dossier-9c4e24879fde.json student 2026-03-24 2026-03-24
 ```
+
+### All categories (4 steps)
+```powershell
+# Step 1 — Create empty records for all categories
+node backfill-temperatures.js ./health-dossier-9c4e24879fde.json student 2026-03-24 2026-03-24
+
+# Step 2 — Fill fridges + freezers
+node fill-empty-fridges.js ./health-dossier-9c4e24879fde.json student 2026-03-24 2026-03-24
+
+# Step 3 — Fill hots
+node fill-empty-hots.js ./health-dossier-9c4e24879fde.json student 2026-03-24 2026-03-24
+```
+
+---
+
+## Temperature value reference
+
+All fill scripts now generate **integer values only**, matching the Angular UI select options exactly:
+
+| Category | Valid values |
+|---|---|
+| Fridges | `0, 1, 2, 3, 4, 5, 6` °C |
+| Freezers | `-18, -19, -20, -21, -22, -23` °C |
+| Hots | `63.0` – `85.0` °C |
 
 ---
 
@@ -291,5 +313,4 @@ node fill-empty-hots.js ./health-dossier-9c4e24879fde.json student 2026-03-01 20
 - ⚠️ **Never commit** `health-dossier-9c4e24879fde.json` — it is already in `.gitignore`
 - ⚠️ **Never commit** `functions/.env` — it contains Twilio secrets
 - ✅ All fill scripts are **safe to re-run** — they only update empty fields
-- 🕙 The **daily Cloud Function** (`dailyTemperatureFill`) runs automatically every night at **22:00 Athens time** — no manual action needed
-
+- 🕙 The **daily Cloud Function** (`dailyTemperatureFill`) runs automatically every night at **23:00 Athens time** for the **student user only** (`WNsdw7QThbXtNcWGo33YB4P9p2V2`) — no manual action needed for fridges and freezers

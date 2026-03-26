@@ -9,29 +9,45 @@
  *  - If omitted => processes ALL users found in the `temperatures` collection
  *
  * Usage:
- *   node backfill-temperatures.js <service-account.json> [userName|email] [startDate] [endDate]
+ *   node backfill-temperatures.js <service-account.json> [userName|email] [startDate] [endDate] [type]
+ *
+ *   type (optional): fridges | freezers | hots | cooked | all (default: all)
  *
  * Examples:
- *   node backfill-temperatures.js ./key.json
- *   node backfill-temperatures.js ./key.json student
- *   node backfill-temperatures.js ./key.json student 2026-03-01 2026-03-23
- *   node backfill-temperatures.js ./key.json student@email.com 2026-01-01 2026-03-23
+ *   node backfill-temperatures.js ./key.json student 2026-03-24 2026-03-24
+ *   node backfill-temperatures.js ./key.json student 2026-03-24 2026-03-24 fridges
+ *   node backfill-temperatures.js ./key.json student 2026-03-24 2026-03-24 freezers
+ *   node backfill-temperatures.js ./key.json student 2026-03-24 2026-03-24 hots
+ *   node backfill-temperatures.js ./key.json student 2026-03-24 2026-03-24 cooked
  */
 const admin = require('firebase-admin');
 const SERVICE_ACCOUNT_PATH = process.argv[2];
 const USER_ARG             = process.argv[3] || null;
 const START_DATE           = new Date(process.argv[4] || '2026-03-01');
 const END_DATE             = new Date(process.argv[5] || '2026-03-23');
+const TYPE_ARG             = (process.argv[6] || 'all').toLowerCase();
+
 if (!SERVICE_ACCOUNT_PATH) {
-  console.error('Usage: node backfill-temperatures.js <service-account.json> [userName|email] [startDate] [endDate]');
+  console.error('Usage: node backfill-temperatures.js <service-account.json> [userName|email] [startDate] [endDate] [fridges|freezers|hots|cooked|all]');
   process.exit(1);
 }
-const CATEGORIES = [
-  { list: 'FRIDGES-LIST',  fallback: 'FRIDGES',  byDate: 'FRIDGES-BY-DATE',  slotBased: true  },
-  { list: 'FREEZERS-LIST', fallback: 'FREEZERS', byDate: 'FREEZERS-BY-DATE', slotBased: true  },
-  { list: 'HOTS-LIST',     fallback: 'HOTS',     byDate: 'HOTS-BY-DATE',     slotBased: false },
-  { list: 'COOKED-LIST',   fallback: 'COOKED',   byDate: 'COOKED-BY-DATE',   slotBased: false },
+
+const ALL_CATEGORIES = [
+  { key: 'fridges',  list: 'FRIDGES-LIST',  fallback: 'FRIDGES',  byDate: 'FRIDGES-BY-DATE',  slotBased: true  },
+  { key: 'freezers', list: 'FREEZERS-LIST', fallback: 'FREEZERS', byDate: 'FREEZERS-BY-DATE', slotBased: true  },
+  { key: 'hots',     list: 'HOTS-LIST',     fallback: 'HOTS',     byDate: 'HOTS-BY-DATE',     slotBased: false },
+  { key: 'cooked',   list: 'COOKED-LIST',   fallback: 'COOKED',   byDate: 'COOKED-BY-DATE',   slotBased: false },
 ];
+
+const VALID_TYPES = ['all', 'fridges', 'freezers', 'hots', 'cooked'];
+if (!VALID_TYPES.includes(TYPE_ARG)) {
+  console.error('Invalid type "' + TYPE_ARG + '". Must be one of: ' + VALID_TYPES.join(', '));
+  process.exit(1);
+}
+
+const CATEGORIES = TYPE_ARG === 'all'
+  ? ALL_CATEGORIES
+  : ALL_CATEGORIES.filter(c => c.key === TYPE_ARG);
 const serviceAccount = require(SERVICE_ACCOUNT_PATH);
 admin.initializeApp({ credential: admin.credential.cert(serviceAccount) });
 const db = admin.firestore();
@@ -115,6 +131,7 @@ async function backfill() {
   console.log('  User  : ' + (USER_ARG || 'ALL USERS'));
   console.log('  From  : ' + START_DATE.toDateString());
   console.log('  To    : ' + END_DATE.toDateString());
+  console.log('  Type  : ' + TYPE_ARG.toUpperCase());
   console.log('---------------------------------------------------\n');
   const dates = buildDateRange(START_DATE, END_DATE);
   let usersToProcess = [];

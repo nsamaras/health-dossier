@@ -3,7 +3,7 @@
  *
  * Finds all FREEZERS-BY-DATE records for a given user where temperatureMorning
  * or temperatureAfternoon are empty ('', null, undefined) and fills them with
- * a random value between -25 and -18 (1 decimal place).
+ * a random integer value from [-18, -19, -20, -21, -22, -23] matching the UI select options.
  *
  * Usage:
  *   node fill-empty-freezers.js <service-account.json> [userName|email|urid] [startDate] [endDate]
@@ -29,9 +29,12 @@ const serviceAccount = require(SERVICE_ACCOUNT_PATH);
 admin.initializeApp({ credential: admin.credential.cert(serviceAccount) });
 const db = admin.firestore();
 
-// Freezer temperature range: -25.0 to -18.0
+// Must match exactly the mat-select options in the Angular UI
+const FREEZER_OPTIONS = [-18, -19, -20, -21, -22, -23];
+const pickOption = (options) => options[Math.floor(Math.random() * options.length)];
+
 function randomFreezerTemp() {
-  return Math.round((Math.random() * 7 - 25) * 10) / 10;
+  return pickOption(FREEZER_OPTIONS);
 }
 
 function toDateOnly(d) {
@@ -118,7 +121,7 @@ async function fillFreezers(urid) {
 async function main() {
   console.log('===================================================');
   console.log('  Fill Empty Freezer Temperatures Script');
-  console.log('  Range: -25.0°C  to  -18.0°C');
+  console.log('  Options: -18°C to -23°C (integers)');
   console.log('===================================================');
   console.log('  User  : ' + (USER_ARG || 'ALL'));
   if (START_DATE) console.log('  From  : ' + START_DATE.toDateString());
