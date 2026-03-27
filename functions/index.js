@@ -2,14 +2,19 @@
  * Health Dossier - Firebase Cloud Functions
  *
  * dailyTemperatureFill
- *   Runs every day at 22:00 (Europe/Athens = UTC+2).
- *   For every user in the `temperatures` collection it:
- *     1. Reads their profile lists (FRIDGES-LIST, FREEZERS-LIST, HOTS-LIST, COOKED-LIST)
+ *   Runs every day at 23:00 (Europe/Athens = UTC+2).
+ *   For every non-admin (student) user it:
+ *     1. Reads their profile lists (FRIDGES-LIST, FREEZERS-LIST)
  *     2. Creates a record for today if one does not exist yet
- *     3. Fills empty temperature fields with realistic random values:
- *          Fridges   :  0.0 –  6.0 °C  (temperatureMorning + temperatureAfternoon)
- *          Freezers  : -25.0 – -18.0 °C (temperatureMorning + temperatureAfternoon)
- *          Hots      : 63.0 –  85.0 °C  (temperature)
+ *     3. Fills empty temperature fields with integer values matching the UI select options:
+ *          Fridges   :  0 – 6 °C   (temperatureMorning + temperatureAfternoon)
+ *          Freezers  : -18 – -23 °C (temperatureMorning + temperatureAfternoon)
+ *
+ * scheduledFirestoreBackup
+ *   Runs every day at 03:00 (Europe/Athens).
+ *   Exports the entire Firestore database to Google Cloud Storage bucket:
+ *     gs://health-dossier-9c4e24879fde-backups/firestore/YYYY-MM-DD/
+ */
  *          Cooked    : 70.0 –  82.0 °C  (temperature)
  */
 
@@ -223,6 +228,39 @@ exports.dailyTemperatureFill = onSchedule(
     }
 
     logger.info('=== dailyTemperatureFill done. Total records: ' + grandTotal + ' ===');
+  }
+);
+
+// ─── Scheduled Firestore Backup ────────────────────────────────────────────
+const { v1 } = require('@google-cloud/firestore');
+const firestoreAdminClient = new v1.FirestoreAdminClient();
+
+const BACKUP_BUCKET = 'gs://health-dossier-9c4e24879fde-backups';
+
+exports.scheduledFirestoreBackup = onSchedule(
+  {
+    schedule      : '0 3 * * *',      // every day at 03:00
+    timeZone      : 'Europe/Athens',
+    memory        : '256MiB',
+    timeoutSeconds: 120,
+  },
+  async () => {
+    const projectId    = process.env.GCLOUD_PROJECT || 'health-dossier-9c4e24879fde';
+    const databaseName = firestoreAdminClient.databasePath(projectId, '(default)');
+    const date         = new Date().toISOString().split('T')[0];   // YYYY-MM-DD
+    const outputUri    = `${BACKUP_BUCKET}/firestore/${date}`;
+
+    logger.info('=== scheduledFirestoreBackup started ===');
+    logger.info('Exporting to: ' + outputUri);
+
+    const [operation] = await firestoreAdminClient.exportDocuments({
+      name           : databaseName,
+      outputUriPrefix: outputUri,
+      collectionIds  : [],           // empty = export ALL collections
+    });
+
+    logger.info('Export operation started: ' + operation.name);
+    logger.info('=== scheduledFirestoreBackup scheduled — check GCS for results ===');
   }
 );
 

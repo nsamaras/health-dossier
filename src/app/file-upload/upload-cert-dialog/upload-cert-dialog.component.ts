@@ -41,8 +41,10 @@ export class UploadCertDialogComponent {
         percentage => {
           this.percentage = Math.round(percentage);
           if (this.percentage === 100) {
-            Swal.fire({ icon: 'success', text: 'Το αρχείο ανέβηκε επιτυχώς!',
-              timer: 2000, timerProgressBar: true, showConfirmButton: false
+            Swal.fire({
+              icon: 'success',
+              text: 'Το αρχείο ανέβηκε επιτυχώς!',
+              confirmButtonText: 'OK'
             }).then(() => this.dialogRef.close(true));
           }
         },

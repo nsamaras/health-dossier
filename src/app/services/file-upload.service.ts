@@ -147,49 +147,42 @@ export class FileUploadService {
   }
 
   deleteFile(file: FileUpload) {
-    this.deleteFileId(file.id)
-        .pipe(
-          tap(() => {
-            Swal.fire({
-              title: 'Tο αρχείο ' + file.name +' θα διαγραφεί.',
-              showDenyButton: true,
-              confirmButtonText: 'Ναί',
-              denyButtonText: 'Όχι',             
-            }).then((result) => {
-              if (result.isConfirmed) {
-                this.fileDeleted.emit(file);
-                this.deleteFileStorage(file)                
-              } 
-            })
-            
-          })
-        )
-        .subscribe();
-  }
+    Swal.fire({
+      title: 'Διαγραφή αρχείου',
+      text: 'Το αρχείο "' + file.name + '" θα διαγραφεί οριστικά. Συνέχεια;',
+      icon: 'warning',
+      showDenyButton: true,
+      confirmButtonText: 'Ναί, διαγραφή',
+      denyButtonText: 'Όχι',
+    }).then(result => {
+      if (!result.isConfirmed) return;
 
-  private deleteFileStorage(file: FileUpload): void {
-    this.storage
-        .ref("uploads/"+file.urid+"/"+file.category+"/"+file.subCategory+"/"+file.name)
-        .delete().pipe(
-          tap(() => {
-            Swal.fire(
-              ' Tο αρχείο ' + file.name +' διεγράφει με επιτυχία.',              
-            )
-          }),
-          catchError(err => {
-            Swal.fire({
-              icon: 'error',
-              title: 'Oops...',
-              text: 'Κάτι δεν πηγε καλα με την διαγραφή του αρχείου '+ file.name
-            })
-            return throwError(err)
-          })
-        ).subscribe();;
-        this.getFiles();
-  }
-  
-  private deleteFileId(fileId: string) {
-    return from(this.db.doc(`uploads/${fileId}`).delete());
+      // Step 1 — delete Firestore document
+      this.db.doc(`uploads/${file.id}`).delete()
+        .then(() => {
+          // Step 2 — delete from Firebase Storage
+          const storagePath = `uploads/${file.urid}/${file.category}/${file.subCategory}/${file.name}`;
+          return this.storage.ref(storagePath).delete().toPromise();
+        })
+        .then(() => {
+          // Step 3 — refresh list and show success
+          this.getFilesByCategory(this.category);
+          Swal.fire({
+            icon: 'success',
+            text: 'Το αρχείο "' + file.name + '" διαγράφηκε επιτυχώς.',
+            confirmButtonText: 'OK'
+          });
+          this.fileDeleted.emit(file);
+        })
+        .catch(err => {
+          Swal.fire({
+            icon: 'error',
+            title: 'Σφάλμα',
+            text: 'Κάτι πήγε στραβά με τη διαγραφή του αρχείου "' + file.name + '".'
+          });
+          console.error('Delete error:', err);
+        });
+    });
   }
 
 }
