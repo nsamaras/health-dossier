@@ -84,6 +84,7 @@ import { CleaningFilesComponent } from './cleaning-disinfection/cleaning-files/c
 import { CleaningFileDetailsComponent } from './cleaning-disinfection/cleaning-file-details/cleaning-file-details.component';
 import { AllergenicComponent } from './allergenic/allergenic.component';
 import { SupplierEvaluationComponent } from './suppliers/supplier-evaluation/supplier-evaluation.component';
+import { SupplierDeliveriesComponent } from './suppliers/supplier-deliveries/supplier-deliveries.component';
 import { AdminDashboardComponent } from './admin-dashboard/admin-dashboard.component';
 import { CompleteProfileDialogComponent } from './auth/complete-profile-dialog/complete-profile-dialog.component';
 
@@ -130,6 +131,7 @@ import { CompleteProfileDialogComponent } from './auth/complete-profile-dialog/c
     CleaningFileDetailsComponent,
     AllergenicComponent,
     SupplierEvaluationComponent,
+    SupplierDeliveriesComponent,
     AdminDashboardComponent,
     CompleteProfileDialogComponent,
   ],

@@ -1,9 +1,11 @@
 import { Component, EventEmitter, OnInit } from '@angular/core';
 import { MatTabChangeEvent } from '@angular/material/tabs';
+import { MatDialog } from '@angular/material/dialog';
 import { FileUploadService } from 'src/app/services/file-upload.service';
 import { SupplierService } from 'src/app/services/supplier.service';
 import { SupplierFile } from '../supplier-file.model';
 import { ExportService } from 'src/app/services/export.service';
+import { UploadCertDialogComponent } from 'src/app/file-upload/upload-cert-dialog/upload-cert-dialog.component';
 
 
 @Component({
@@ -24,8 +26,18 @@ export class SupplierFilesComponent implements OnInit {
 
   constructor(  private service: SupplierService,
               private fileUploadService: FileUploadService, 
-              private exportService: ExportService ) {
+              private exportService: ExportService,
+              private dialog: MatDialog ) {
    }
+
+  // ...existing code...
+
+  openUploadDialog(): void {
+    this.dialog.open(UploadCertDialogComponent, {
+      width: '480px',
+      disableClose: false
+    });
+  }
 
   fetchSupplierFilesHeaders() {
         this.service.loadByCategory('supplier-files').subscribe(headers => {              
@@ -36,8 +48,12 @@ export class SupplierFilesComponent implements OnInit {
     }
 
   public tabChanged(tabChangeEvent: MatTabChangeEvent): void {
-      this.fileUploadService.getSuppliersFiles('supplier-files'); 
+      this.fileUploadService.getSuppliersFiles('supplier-files');
       this.selectedTabIndex = tabChangeEvent.index;
+      if (tabChangeEvent.index === 2) {
+        this.fileUploadService.setMenuCategoryAndSubCategory(tabChangeEvent.index, 'supplier-files');
+        this.fileUploadService.getFilesByCategory('supplier-files');
+      }
   }
 
 }
