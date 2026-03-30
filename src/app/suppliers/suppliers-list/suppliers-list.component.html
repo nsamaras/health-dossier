@@ -1,10 +1,12 @@
 <div class="tab-content">
   <div class="toolbar-row">
-    <button mat-raised-button color="primary" (click)="addSupplier()">
+    <button mat-raised-button color="primary" (click)="addSupplier()" style="margin-right: 8px;">
       <mat-icon>add</mat-icon> Προσθήκη
     </button>
+      <button mat-raised-button color="primary" (click)="exportSuppliers()">
+          <mat-icon>print</mat-icon> Εκτύπωση
+      </button>
   </div>
-
   <form #myform="ngForm">
     <div class="table-wrapper">
       <table mat-table [dataSource]="suppliersData" class="suppliers-table mat-elevation-z2">

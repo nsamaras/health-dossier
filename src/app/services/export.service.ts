@@ -64,7 +64,7 @@ pdfMake.vfs = pdfFonts.pdfMake.vfs;
             }
           });
           doc.output('dataurlnewwindow');
-          doc.save('export.pdf');
+          doc.save('Έλεγχος-καθαρισμού.pdf');
         });
       }
 
@@ -137,7 +137,7 @@ pdfMake.vfs = pdfFonts.pdfMake.vfs;
             }
           });
               doc.output('dataurlnewwindow');
-              doc.save('temperatures.pdf');
+              doc.save('Παρακολούθηση-Θερμοκρασίών.pdf');
           });
       }
 
@@ -178,10 +178,29 @@ pdfMake.vfs = pdfFonts.pdfMake.vfs;
             }
           });
           doc.output('dataurlnewwindow');
-          doc.save('export.pdf');
+          doc.save('Αλλεργιογόνα.pdf');
         })          
       }
 
+
+      exportSuppliers() {
+        const doc = this.createDoc();
+        this.supplierService.loadSuppliersByUrid().subscribe(results => {
+          const data = (results as any[]).map((s) => [s.name || '—', s.type || '—']);
+          autoTable(doc, {
+            head: [['Όνομα προμηθευτή', 'Είδος']],
+            body: data,
+            styles: {
+              font: 'Amiri',
+              fontStyle: 'normal',
+            },
+            headStyles: {
+              halign: 'center',
+            },
+          });
+          doc.save('Λίστα-προμηθευτών.pdf');
+        });
+      }
 
       exportSuppliersEvaluation() {
           const doc = this.createDoc();  
@@ -331,7 +350,7 @@ pdfMake.vfs = pdfFonts.pdfMake.vfs;
                yPosition += lineHeight;
             }
               doc.output('dataurlnewwindow');
-              doc.save('export.pdf');
+              doc.save('Αξιολόγηση-προμηθευτών.pdf');
             });
       }
 

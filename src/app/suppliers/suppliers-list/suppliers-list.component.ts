@@ -9,6 +9,7 @@ import Swal from 'sweetalert2';
 import { AddSupplierComponent } from '../add-supplier/add-supplier.component';
 import { SupplierTypeModel } from '../supplier-type.model';
 import { SupplierModel } from '../supplier.model';
+import { ExportService } from 'src/app/services/export.service';
 
 export interface PeriodicElement {
   name: string;
@@ -32,7 +33,8 @@ export class SuppliersListComponent implements OnInit {
 
   constructor(private dialog: MatDialog,
     private supplierService: SupplierService,
-    private userService: UserService) { 
+    private userService: UserService,
+    private exportService: ExportService) {
       this.loadSuppliersByUrid();
       this.loadSuppliersTypes();
     }
@@ -109,4 +111,10 @@ export class SuppliersListComponent implements OnInit {
       })
     }
   }
+
+ exportSuppliers() {
+    this.exportService.exportSuppliers();
+  }
+
+
 }

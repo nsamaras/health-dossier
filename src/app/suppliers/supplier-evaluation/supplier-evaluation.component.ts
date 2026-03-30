@@ -165,7 +165,7 @@ export class SupplierEvaluationComponent implements OnInit {
     return formatDate(timestamp.toDate(), format || 'medium', 'en-us');
   }
 
-  export() {
-    this.exportService.exportSuppliersEvaluation();
-  }
+  exportSuppliersEvaluation() {
+      this.exportService.exportSuppliersEvaluation();
+    }
 }

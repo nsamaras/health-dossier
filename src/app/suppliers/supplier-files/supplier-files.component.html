@@ -12,16 +12,11 @@
 
   <mat-card class="content-card">
     <mat-card-content>
-      <div class="toolbar-row">
-        <span class="spacer"></span>
-        <button mat-raised-button color="primary" (click)="export()">
-          <mat-icon>print</mat-icon> Εκτύπωση
-        </button>
-      </div>
+
       <mat-tab-group (selectedTabChange)="tabChanged($event)" mat-align-tabs="center">
-        <mat-tab label="Λίστα προμηθευτών">
-          <app-suppliers-list></app-suppliers-list>
-        </mat-tab>
+          <mat-tab label="Λίστα προμηθευτών">
+              <app-suppliers-list></app-suppliers-list>
+          </mat-tab>
         <mat-tab label="Αξιολόγηση προμηθευτών">
           <div *ngIf="selectedTabIndex === 1">
             <app-supplier-evaluation></app-supplier-evaluation>

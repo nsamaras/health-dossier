@@ -40,8 +40,4 @@ export class SupplierFilesComponent implements OnInit {
       this.selectedTabIndex = tabChangeEvent.index;
   }
 
-  export() {
-    this.exportService.exportSuppliersEvaluation();
-  }
- 
 }
