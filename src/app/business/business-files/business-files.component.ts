@@ -27,7 +27,8 @@ export class BusinessFilesComponent implements OnInit {
                         'Διάγραμμα ροής', 
                         'Κατόψεις', 
                         'Λοιπά αρχεία άδειας', 
-                        'Νομοθεσία'];
+                        'Νομοθεσία',
+                        'Συμβαση ανακύκλωσης ελαίων'];
 
   menu: BusinessFile []  = [];
   subscription: Subscription;
@@ -42,8 +43,11 @@ export class BusinessFilesComponent implements OnInit {
 
   fetchBusinessFiles() {
         this.service.loadByCategory('business-files').subscribe(headers => {              
-            this.service.loadHeadersByMenuId(headers [0].id).subscribe(menu => {
-            this.menu = menu;
+            this.service.loadHeadersByMenuId(headers[0].id).subscribe(menu => {
+            this.menu = [
+              ...menu,
+              new BusinessFile('Συμβαση ανακύκλωσης ελαίων', '')
+            ];
             });
         });
     }
