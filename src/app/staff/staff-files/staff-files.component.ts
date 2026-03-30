@@ -15,7 +15,7 @@ import { UploadCertDialogComponent } from 'src/app/file-upload/upload-cert-dialo
 export class StaffFilesComponent implements OnInit {
 
   descriptionText: string = `Στο πεδίο "Aρχεία προσωπικού" μπορείς να βρεις/προσθέσεις τα εξής:`;
-  items: string[] = ['Λίστα προσωπικού', 'Πιστοποιητικά υγείας', 'Εκπαιδεύσεις προσωπικού', 'Σημάνσεις'];
+  items: string[] = ['Πιστοποιητικά υγείας', 'Εκπαιδεύσεις προσωπικού', 'Σημάνσεις'];
 
   menu: StaffFile[] = [];
   subscription: Subscription;
@@ -33,7 +33,7 @@ export class StaffFilesComponent implements OnInit {
   fetchFiles() {
     this.service.loadByCategory('staff-files').subscribe(headers => {
       this.service.loadHeadersByMenuId(headers[0].id).subscribe(menu => {
-        this.menu = menu;
+        this.menu = menu.filter(m => m.title !== 'Λίστα προσωπικού');
         if (menu.length > 0) {
           this.service.selectedTabTitle$.next(menu[0].title || '');
           this.fileUploadService.setMenuCategoryAndSubCategory(0, 'staff-files');

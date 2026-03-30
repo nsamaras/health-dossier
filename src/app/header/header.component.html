@@ -22,8 +22,8 @@
       </a>
 
       <a mat-list-item routerLink="/water-files" *ngIf="(user.isLoggedIn$ | async) && (user.isActiveUser$ | async)" routerLinkActive="router-link-active">
-        <mat-icon>water_drop</mat-icon>
-        <span>Αρχεία νερού</span>
+        <mat-icon>science</mat-icon>
+        <span>Αρχεία Αναλύσεων</span>
       </a>
 
       <a mat-list-item routerLink="/disinsect-files" *ngIf="(user.isLoggedIn$ | async) && (user.isActiveUser$ | async)" routerLinkActive="router-link-active">

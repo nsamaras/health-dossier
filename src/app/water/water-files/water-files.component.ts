@@ -12,7 +12,7 @@ import { WaterFile } from '../water-file.model';
 })
 export class WaterFilesComponent implements OnInit {
 
-  descriptionText: string = `Στο πεδίο "Aρχεία Νερού" μπορείς να βρεις/προσθέσεις τα εξής:`;
+  descriptionText: string = `Στο πεδίο "Αρχεία Αναλύσεων" μπορείς να βρεις/προσθέσεις τα εξής:`;
   items: string[] = ['Λίστα προσωπικού', 'Λογαριασμός υδροδότησης', 'Ανάλυση νερού', 'Καταλληλότητα πάγου'];
 
   menu: WaterFile[] = [];
