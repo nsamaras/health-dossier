@@ -47,6 +47,8 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import {TextFieldModule} from '@angular/cdk/text-field'; 
 import { FileUploadService } from './services/file-upload.service';
 import { UploadFormComponent } from './file-upload/upload-form/upload-form.component';
+import { UploadFormDateComponent } from './file-upload/upload-form-date/upload-form-date.component';
+import { UploadCertDialogComponent } from './file-upload/upload-cert-dialog/upload-cert-dialog.component';
 import { UploadListComponent } from './file-upload/upload-list/upload-list.component';
 import { UploadDetailsComponent } from './file-upload/upload-details/upload-details.component';
 import { StaffComponent } from './staff/staff.component';
@@ -97,6 +99,8 @@ import { CompleteProfileDialogComponent } from './auth/complete-profile-dialog/c
     BusinessFileComponent,
     HeaderComponent,
     UploadFormComponent,
+    UploadFormDateComponent,
+    UploadCertDialogComponent,
     UploadListComponent,
     UploadDetailsComponent,
     AuthComponent,

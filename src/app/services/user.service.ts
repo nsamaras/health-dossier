@@ -54,8 +54,6 @@ export class UserService {
     }
 
     getUserByUrid(urid: string) {
-        this.isActiveUser$.next(false);
-        this.isAdminUser$.next(false);
         return this.db.collection('users',
                 ref => ref
                 .where("urid", "==", urid))

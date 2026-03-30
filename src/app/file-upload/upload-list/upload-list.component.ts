@@ -16,7 +16,7 @@ import { MatPaginator } from '@angular/material/paginator';
 })
 export class UploadListComponent implements OnInit, OnDestroy, AfterViewInit {
 
-  displayedColumns: string[] = ['position', 'name', 'download', 'delete'];
+  displayedColumns: string[] = ['position', 'name', 'expiryDate', 'download', 'delete'];
   dataSource = new MatTableDataSource<any>([]);
   fileUploads: any[];
   private fileChangeSub: Subscription;
@@ -56,5 +56,14 @@ export class UploadListComponent implements OnInit, OnDestroy, AfterViewInit {
     const pageSize = this.paginator.pageSize;
     const actualIndex = pageIndex * pageSize + index;
     this.uploadService.deleteFile(this.dataSource.data[actualIndex]);
+  }
+
+  /** Converts a Firestore Timestamp, plain Date, or null/undefined to a JS Date */
+  toDate(value: any): Date | null {
+    if (!value) return null;
+    if (value instanceof Date) return value;
+    if (typeof value.toDate === 'function') return value.toDate(); // Firestore Timestamp
+    if (value._seconds !== undefined) return new Date(value._seconds * 1000); // serialised Timestamp
+    return null;
   }
 }

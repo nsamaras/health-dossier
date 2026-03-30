@@ -4,6 +4,10 @@
     margin: 20px auto 0 auto;
 }
 
+.cert-action {
+    padding: 20px 0 10px 0;
+}
+
 
 .header {
     display: flex;

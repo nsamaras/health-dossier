@@ -20,6 +20,101 @@ cd "C:\Users\samarasn\workspace\health-dossier\health-dossier\functions\scripts"
 
 ---
 
+## 🔒 Firestore Backup & Restore
+
+Backups are exported to Google Cloud Storage bucket:
+```
+gs://health-dossier-9c4e24879fde-backups/firestore/YYYY-MM-DD/
+```
+
+### One-time setup (do this once)
+
+**1. Create the GCS backup bucket:**
+```powershell
+gcloud storage buckets create gs://health-dossier-9c4e24879fde-backups `
+  --project=health-dossier-9c4e24879fde `
+  --location=europe-west1 `
+  --uniform-bucket-level-access
+```
+
+**2. Grant the service account export permissions:**
+```powershell
+# Get the default Cloud Functions service account email:
+# health-dossier-9c4e24879fde@appspot.gserviceaccount.com
+
+gcloud projects add-iam-policy-binding health-dossier-9c4e24879fde `
+  --member="serviceAccount:health-dossier-9c4e24879fde@appspot.gserviceaccount.com" `
+  --role="roles/datastore.importExportAdmin"
+
+gcloud storage buckets add-iam-policy-binding gs://health-dossier-9c4e24879fde-backups `
+  --member="serviceAccount:health-dossier-9c4e24879fde@appspot.gserviceaccount.com" `
+  --role="roles/storage.admin"
+```
+
+**3. Deploy the backup Cloud Function:**
+```powershell
+cd ..   # go to functions/
+firebase deploy --only functions:scheduledFirestoreBackup
+```
+
+---
+
+### Automatic backup (Cloud Function)
+
+The `scheduledFirestoreBackup` Cloud Function runs automatically every day at **03:00 Athens time**.
+- Exports ALL Firestore collections
+- Saves to `gs://health-dossier-9c4e24879fde-backups/firestore/YYYY-MM-DD/`
+- No manual action needed once deployed
+
+---
+
+### `backup-firestore.js` — Manual backup
+
+Run anytime to trigger an immediate export.
+
+```powershell
+# Backup today
+node backup-firestore.js ./health-dossier-9c4e24879fde.json
+
+# Backup with a specific date label
+node backup-firestore.js ./health-dossier-9c4e24879fde.json 2026-03-26
+```
+
+The export runs **asynchronously** — the script starts it and exits. Check progress at:
+```
+https://console.cloud.google.com/storage/browser/health-dossier-9c4e24879fde-backups/firestore
+```
+
+---
+
+### `restore-firestore.js` — Restore from backup
+
+> ⚠️ **WARNING:** Restoring will **overwrite** existing Firestore documents with the same IDs.
+> Always make a fresh backup before restoring.
+
+```powershell
+# Restore from a specific date
+node restore-firestore.js ./health-dossier-9c4e24879fde.json 2026-03-26
+```
+
+The script asks for confirmation before proceeding. The import also runs asynchronously.
+
+---
+
+### View available backups
+
+```powershell
+gcloud storage ls gs://health-dossier-9c4e24879fde-backups/firestore/
+```
+
+Or open in browser:
+```
+https://console.cloud.google.com/storage/browser/health-dossier-9c4e24879fde-backups/firestore
+```
+
+---
+---
+
 ## Scripts
 
 ### 1. `backfill-temperatures.js`

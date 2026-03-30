@@ -52,14 +52,40 @@ export class FileUploadService {
     return uploadTask.percentageChanges();
   }
 
+  pushFileToStorageWithDate(fileUpload: FileUpload, expiryDate: Date): Observable<number> {
+    fileUpload.expiryDate = expiryDate;
+    this.basePath = '/uploads/' + this.userService.getUserId() + '/' + this.category + '/' + this.subCategory;
+    const filePath = `${this.basePath}/${fileUpload.file.name}`;
+    const storageRef = this.storage.ref(filePath);
+    const uploadTask = this.storage.upload(filePath, fileUpload.file);
+    uploadTask.snapshotChanges().pipe(
+      finalize(() => {
+        storageRef.getDownloadURL().subscribe(downloadURL => {
+          fileUpload.url      = downloadURL;
+          fileUpload.name     = fileUpload.file.name;
+          fileUpload.subCategory = this.subCategory;
+          fileUpload.urid     = this.userService.getUserId();
+          fileUpload.category = this.category;
+          this.saveFileData(fileUpload);
+          this.getFiles();
+        });
+      })
+    ).subscribe();
+    return uploadTask.percentageChanges();
+  }
+
   private saveFileData(fileUpload: FileUpload): void {
-        this.db.collection('uploads').add({
+        const data: any = {
           name: fileUpload.name,
           url: fileUpload.url,
           urid: fileUpload.urid,
           category: fileUpload.category,
           subCategory: fileUpload.subCategory
-        });
+        };
+        if (fileUpload.expiryDate) {
+          data.expiryDate = fileUpload.expiryDate;
+        }
+        this.db.collection('uploads').add(data);
   }
 
   removeId(data: any) {
@@ -121,49 +147,42 @@ export class FileUploadService {
   }
 
   deleteFile(file: FileUpload) {
-    this.deleteFileId(file.id)
-        .pipe(
-          tap(() => {
-            Swal.fire({
-              title: 'Tο αρχείο ' + file.name +' θα διαγραφεί.',
-              showDenyButton: true,
-              confirmButtonText: 'Ναί',
-              denyButtonText: 'Όχι',             
-            }).then((result) => {
-              if (result.isConfirmed) {
-                this.fileDeleted.emit(file);
-                this.deleteFileStorage(file)                
-              } 
-            })
-            
-          })
-        )
-        .subscribe();
-  }
+    Swal.fire({
+      title: 'Διαγραφή αρχείου',
+      text: 'Το αρχείο "' + file.name + '" θα διαγραφεί οριστικά. Συνέχεια;',
+      icon: 'warning',
+      showDenyButton: true,
+      confirmButtonText: 'Ναί, διαγραφή',
+      denyButtonText: 'Όχι',
+    }).then(result => {
+      if (!result.isConfirmed) return;
 
-  private deleteFileStorage(file: FileUpload): void {
-    this.storage
-        .ref("uploads/"+file.urid+"/"+file.category+"/"+file.subCategory+"/"+file.name)
-        .delete().pipe(
-          tap(() => {
-            Swal.fire(
-              ' Tο αρχείο ' + file.name +' διεγράφει με επιτυχία.',              
-            )
-          }),
-          catchError(err => {
-            Swal.fire({
-              icon: 'error',
-              title: 'Oops...',
-              text: 'Κάτι δεν πηγε καλα με την διαγραφή του αρχείου '+ file.name
-            })
-            return throwError(err)
-          })
-        ).subscribe();;
-        this.getFiles();
-  }
-  
-  private deleteFileId(fileId: string) {
-    return from(this.db.doc(`uploads/${fileId}`).delete());
+      // Step 1 — delete Firestore document
+      this.db.doc(`uploads/${file.id}`).delete()
+        .then(() => {
+          // Step 2 — delete from Firebase Storage
+          const storagePath = `uploads/${file.urid}/${file.category}/${file.subCategory}/${file.name}`;
+          return this.storage.ref(storagePath).delete().toPromise();
+        })
+        .then(() => {
+          // Step 3 — refresh list and show success
+          this.getFilesByCategory(this.category);
+          Swal.fire({
+            icon: 'success',
+            text: 'Το αρχείο "' + file.name + '" διαγράφηκε επιτυχώς.',
+            confirmButtonText: 'OK'
+          });
+          this.fileDeleted.emit(file);
+        })
+        .catch(err => {
+          Swal.fire({
+            icon: 'error',
+            title: 'Σφάλμα',
+            text: 'Κάτι πήγε στραβά με τη διαγραφή του αρχείου "' + file.name + '".'
+          });
+          console.error('Delete error:', err);
+        });
+    });
   }
 
 }

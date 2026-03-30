@@ -1,0 +1,48 @@
+<div class="file-upload">
+  <form>
+    <div class="file-image-upload">
+
+      <!-- Date picker -->
+      <mat-form-field appearance="outline" class="date-field">
+        <mat-label>Ημερομηνία λήξης</mat-label>
+        <input matInput
+               [matDatepicker]="expiryPicker"
+               [(ngModel)]="expiryDate"
+               name="expiryDate"
+               placeholder="ΗΗ/ΜΜ/ΕΕΕΕ"
+               readonly>
+        <mat-datepicker-toggle matSuffix [for]="expiryPicker"></mat-datepicker-toggle>
+        <mat-datepicker #expiryPicker></mat-datepicker>
+      </mat-form-field>
+
+      <!-- File selector -->
+      <div class="file-select-row">
+        <button mat-stroked-button color="primary" type="button" (click)="fileInput.click()">
+          <mat-icon>attach_file</mat-icon> Επιλογή αρχείου
+        </button>
+        <span class="file-name-label">{{ fileName }}</span>
+        <input #fileInput type="file" class="hidden-input" (change)="selectFile($event)" />
+      </div>
+
+      <!-- Upload progress -->
+      <div class="upload-progress" *ngIf="currentFileUpload">
+        <mat-progress-bar class="progress-bar" mode="determinate" [value]="percentage"></mat-progress-bar>
+        <span>{{ percentage }}%</span>
+      </div>
+
+    </div>
+
+    <button mat-raised-button color="warn"
+            class="btn btn-success btn-sm"
+            [disabled]="!selectedFiles || !expiryDate"
+            (click)="upload()">
+      Αποθήκευση αρχείου
+    </button>
+
+    <p class="hint" *ngIf="!expiryDate">
+      <mat-icon class="hint-icon">info</mat-icon>
+      Επιλέξτε ημερομηνία λήξης για να ενεργοποιηθεί η αποθήκευση.
+    </p>
+  </form>
+</div>
+

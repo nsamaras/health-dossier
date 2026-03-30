@@ -1,0 +1,50 @@
+<h2 mat-dialog-title>
+  <mat-icon>badge</mat-icon>
+  Ανέβασμα Πιστοποιητικού Υγείας
+</h2>
+
+<div class="mat-dialog-content">
+  <form>
+
+    <mat-form-field appearance="outline" style="width: 100%;">
+      <mat-label>Ημερομηνία λήξης πιστοποιητικού</mat-label>
+      <input matInput
+             [matDatepicker]="expiryPicker"
+             [(ngModel)]="expiryDate"
+             name="expiryDate"
+             placeholder="ΗΗ/ΜΜ/ΕΕΕΕ"
+             readonly>
+      <mat-datepicker-toggle matSuffix [for]="expiryPicker"></mat-datepicker-toggle>
+      <mat-datepicker #expiryPicker></mat-datepicker>
+    </mat-form-field>
+
+    <div class="file-select-row">
+      <button mat-stroked-button color="primary" type="button" (click)="fileInput.click()">
+        <mat-icon>attach_file</mat-icon> Επιλογή αρχείου
+      </button>
+      <span class="file-name-label">{{ fileName }}</span>
+      <input #fileInput type="file" class="hidden-input" (change)="selectFile($event)" />
+    </div>
+
+    <div class="upload-progress" *ngIf="currentFileUpload">
+      <mat-progress-bar mode="determinate" [value]="percentage"></mat-progress-bar>
+      <span>{{ percentage }}%</span>
+    </div>
+
+    <p class="hint" *ngIf="!selectedFiles">
+      <mat-icon class="hint-icon">info</mat-icon>
+      Επιλέξτε αρχείο για να ενεργοποιηθεί η αποθήκευση.
+    </p>
+
+  </form>
+</div>
+
+<mat-dialog-actions align="end">
+  <button mat-button (click)="close()">Ακύρωση</button>
+  <button mat-raised-button color="primary"
+          [disabled]="!selectedFiles"
+          (click)="upload()">
+    <mat-icon>upload</mat-icon> Αποθήκευση
+  </button>
+</mat-dialog-actions>
+
