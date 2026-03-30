@@ -28,7 +28,8 @@ export class BusinessFilesComponent implements OnInit {
                         'Κατόψεις', 
                         'Λοιπά αρχεία άδειας', 
                         'Νομοθεσία',
-                        'Συμβαση ανακύκλωσης ελαίων'];
+                        'Συμβαση ανακύκλωσης ελαίων',
+                        'Βεβαιωση καλης λειτουργίας απαγωγικού'];
 
   menu: BusinessFile []  = [];
   subscription: Subscription;
@@ -46,7 +47,8 @@ export class BusinessFilesComponent implements OnInit {
             this.service.loadHeadersByMenuId(headers[0].id).subscribe(menu => {
             this.menu = [
               ...menu,
-              new BusinessFile('Συμβαση ανακύκλωσης ελαίων', '')
+              new BusinessFile('Συμβαση ανακύκλωσης ελαίων', ''),
+              new BusinessFile('Βεβαιωση καλης λειτουργίας απαγωγικού', '')
             ];
             });
         });
