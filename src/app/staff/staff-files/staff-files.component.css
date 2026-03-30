@@ -4,6 +4,10 @@
     margin: 20px auto 0 auto;
 }
 
+::ng-deep .mat-tab-body-content {
+    overflow: hidden !important;
+}
+
 .cert-action {
     padding: 20px 0 10px 0;
 }
