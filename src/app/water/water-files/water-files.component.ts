@@ -13,7 +13,7 @@ import { WaterFile } from '../water-file.model';
 export class WaterFilesComponent implements OnInit {
 
   descriptionText: string = `Στο πεδίο "Αρχεία Αναλύσεων" μπορείς να βρεις/προσθέσεις τα εξής:`;
-  items: string[] = ['Λίστα προσωπικού', 'Λογαριασμός υδροδότησης', 'Ανάλυση νερού', 'Καταλληλότητα πάγου'];
+  items: string[] = ['Λογαριασμός υδροδότησης', 'Ανάλυση νερού', 'Καταλληλότητα πάγου'];
 
   menu: WaterFile[] = [];
   subscription: Subscription;
@@ -30,7 +30,7 @@ export class WaterFilesComponent implements OnInit {
   fetchFiles() {
     this.service.loadByCategory('water-files').subscribe(headers => {
       this.service.loadHeadersByMenuId(headers[0].id).subscribe(menu => {
-        this.menu = menu;
+        this.menu = menu.filter(m => m.title !== 'Λίστα προσωπικού');
         if (menu.length > 0) {
           this.service.selectedTabTitle$.next(menu[0].title || '');
           this.fileUploadService.setMenuCategoryAndSubCategory(0, 'water-files');
