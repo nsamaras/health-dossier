@@ -29,3 +29,7 @@
   .example-full-width {
     width: 100%;
   }
+
+  ::ng-deep .mat-tab-body-content {
+    overflow: hidden !important;
+  }

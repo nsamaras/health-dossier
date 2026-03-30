@@ -101,3 +101,6 @@ table {
   background-color: #e3eaf6;
 }
 
+::ng-deep .mat-tab-body-content {
+  overflow: hidden !important;
+}

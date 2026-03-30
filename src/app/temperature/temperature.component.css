@@ -27,7 +27,6 @@ table {
 
 .fridge-table {
   width: 100%;
-  min-width: 700px;
   border-radius: 8px;
   overflow: hidden;
   margin-top: 16px;
@@ -35,7 +34,7 @@ table {
 
 .table-scroll {
   width: 100%;
-  overflow-x: auto;
+  overflow: hidden;
   display: block;
   margin-top: 16px;
   border-radius: 8px;
@@ -147,7 +146,7 @@ mat-form-field {
 }
 
 ::ng-deep .mat-tab-body-content {
-  overflow: auto !important;
+  overflow: hidden !important;
   padding-bottom: 80px;
 }
 

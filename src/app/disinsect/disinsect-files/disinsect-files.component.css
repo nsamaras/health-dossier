@@ -21,3 +21,7 @@
     padding: 20px;
     text-align: center;
   }
+
+::ng-deep .mat-tab-body-content {
+  overflow: hidden !important;
+}
