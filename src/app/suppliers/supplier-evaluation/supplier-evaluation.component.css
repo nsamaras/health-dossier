@@ -1,7 +1,9 @@
 
 .courses-panel {
-  max-width: 800px;
-  margin: 20px auto 0 auto;
+  width: 100%;
+  margin: 20px 0 0 0;
+  padding: 0 16px;
+  box-sizing: border-box;
 }
 
 table {

@@ -1,54 +1,107 @@
 .tab-content {
-  padding: 24px 8px 32px 8px;
+  padding: 24px 16px 32px 16px;
+  box-sizing: border-box;
+  width: 100%;
 }
+
 .toolbar-row {
   display: flex;
   align-items: center;
   margin-bottom: 8px;
 }
+
+/* ✅ Keep full width but control columns */
 table {
-  width: 100%;
-}
-.table-wrapper {
-  margin-top: 16px;
-  border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-}
-.suppliers-table {
   width: 100%;
   border-radius: 8px;
   overflow: hidden;
+  margin-top: 16px;
+  table-layout: fixed; /* keep this */
 }
+
+/* ✅ Wrapper stays same */
+.table-wrapper {
+  width: 100%;
+  margin-top: 16px;
+  border-radius: 8px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+  box-sizing: border-box;
+  overflow: hidden;
+}
+
+/* ✅ Define column widths (IMPORTANT) */
+.mat-column-name {
+  width: 35%;
+}
+
+.mat-column-type {
+  width: 45%;
+}
+
+.mat-column-delete {
+  width: 20%;
+}
+
+/* ✅ Header styling */
 .suppliers-table th.mat-header-cell {
   background-color: #1a66d2;
   color: white;
   font-weight: 600;
   padding: 12px 16px;
+  text-align: left; /* better UX */
 }
+
+/* ✅ Cell styling */
 .suppliers-table td.mat-cell {
   padding: 10px 16px;
+  text-align: left; /* better alignment */
 }
+
+/* ✅ Row styles */
 .suppliers-table tr.mat-row:nth-child(even) {
   background-color: #f5f7fa;
 }
+
 .suppliers-table tr.mat-row:hover {
   background-color: #e3eaf6;
 }
+
+/* ✅ FIX: prevent huge input stretching */
+mat-form-field {
+  width: 100%;
+  max-width: 260px; /* 🔥 key fix */
+}
+
+/* Optional: tighter look */
+.mat-form-field-infix {
+  padding: 4px 0;
+}
+
+/* Shadow */
+.mat-elevation-z8 {
+  box-shadow: 0 2px 12px rgba(0,0,0,0.08) !important;
+}
+
+/* Actions */
 .action-row {
   margin-top: 16px;
   margin-bottom: 16px;
   display: flex;
   justify-content: flex-end;
 }
+
 .action-row button mat-icon {
   color: white;
 }
+
+/* Delete icon */
 .delete-icon {
   cursor: pointer;
   color: #e53935;
   font-size: 22px;
   transition: color 0.2s;
 }
+
 .delete-icon:hover {
   color: #b71c1c;
 }

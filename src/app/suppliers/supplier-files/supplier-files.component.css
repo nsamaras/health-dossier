@@ -1,7 +1,9 @@
 .page-container {
-  max-width: 960px;
+  width: 100%;
+  max-width: 900px;
   margin: 40px auto;
   padding: 0 24px;
+  box-sizing: border-box;
 }
 .description-card {
   border-radius: 12px !important;
@@ -27,5 +29,22 @@
   flex: 1;
 }
 ::ng-deep .mat-tab-body-content {
-  overflow: hidden !important;
+  height: auto !important;
+  overflow: visible !important;
+}
+::ng-deep .mat-tab-body-wrapper {
+  height: auto !important;
+  flex: 1 1 auto !important;
+  width: 100% !important;
+}
+/* Inactive bodies stay absolutely positioned – they take up NO layout space */
+::ng-deep .mat-tab-body:not(.mat-tab-body-active) {
+  position: absolute !important;
+  width: 100% !important;
+}
+/* Only the active body enters the normal flow so the wrapper stretches to fit */
+::ng-deep .mat-tab-body.mat-tab-body-active {
+  position: relative !important;
+  overflow: visible !important;
+  width: 100% !important;
 }
