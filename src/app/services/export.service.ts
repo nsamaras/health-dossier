@@ -124,7 +124,7 @@ pdfMake.vfs = pdfFonts.pdfMake.vfs;
               const vv = [];
               if(cookedExport[i].temperature !== undefined) {
                 var dtString = this.temperatureService.transform(cookedExport[i].date, "dd-MM-yyyy");
-                vv.push(dtString, 'Μαγειρεμένα', cookedExport[i].name, cookedExport[i].temperature+"°C", cookedExport[i].temperature+"°C")
+                vv.push(dtString, 'Μαγειρεμένα', cookedExport[i].name, cookedExport[i].temperature+"°C", "")
                 data.push(vv);
               }
             }
