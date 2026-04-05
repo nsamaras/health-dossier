@@ -26,6 +26,7 @@ import {MatProgressBarModule} from '@angular/material/progress-bar';
 import {MatDialogModule} from '@angular/material/dialog';
 import {MatSelectModule} from '@angular/material/select';
 import {MatDatepickerModule} from '@angular/material/datepicker';
+import {MatTooltipModule} from '@angular/material/tooltip';
 
 import {MatExpansionModule} from '@angular/material/expansion';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
@@ -86,6 +87,7 @@ import { AllergenicComponent } from './allergenic/allergenic.component';
 import { SupplierEvaluationComponent } from './suppliers/supplier-evaluation/supplier-evaluation.component';
 import { SupplierDeliveriesComponent } from './suppliers/supplier-deliveries/supplier-deliveries.component';
 import { AdminDashboardComponent } from './admin-dashboard/admin-dashboard.component';
+import { UserEditDialogComponent } from './admin-dashboard/user-edit-dialog/user-edit-dialog.component';
 import { CompleteProfileDialogComponent } from './auth/complete-profile-dialog/complete-profile-dialog.component';
 
 
@@ -133,6 +135,7 @@ import { CompleteProfileDialogComponent } from './auth/complete-profile-dialog/c
     SupplierEvaluationComponent,
     SupplierDeliveriesComponent,
     AdminDashboardComponent,
+    UserEditDialogComponent,
     CompleteProfileDialogComponent,
   ],
   imports: [
@@ -162,6 +165,7 @@ import { CompleteProfileDialogComponent } from './auth/complete-profile-dialog/c
     MatExpansionModule,
     MatNativeDateModule,
     MatCheckboxModule,
+    MatTooltipModule,
     ReactiveFormsModule,
     AppRoutingModule,
     HttpClientModule,

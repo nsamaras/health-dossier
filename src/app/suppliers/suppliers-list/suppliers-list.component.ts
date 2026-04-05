@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { MatTableDataSource } from '@angular/material/table';
 import { throwError } from 'rxjs';
-import { catchError, tap } from 'rxjs/operators';
+import { catchError, filter, take, tap } from 'rxjs/operators';
 import { SupplierService } from 'src/app/services/supplier.service';
 import { UserService } from 'src/app/services/user.service';
 import Swal from 'sweetalert2';
@@ -35,11 +35,16 @@ export class SuppliersListComponent implements OnInit {
     private supplierService: SupplierService,
     private userService: UserService,
     private exportService: ExportService) {
-      this.loadSuppliersByUrid();
-      this.loadSuppliersTypes();
     }
 
   ngOnInit(): void {
+    this.userService.isActiveUser$.pipe(
+      filter(active => active),
+      take(1)
+    ).subscribe(() => {
+      this.loadSuppliersByUrid();
+      this.loadSuppliersTypes();
+    });
   }
 
   addSupplier() {

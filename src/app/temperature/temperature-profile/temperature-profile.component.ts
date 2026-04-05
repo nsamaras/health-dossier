@@ -5,7 +5,7 @@ import { Observable, Subject, Subscription } from 'rxjs';
 import firebase from 'firebase/compat/app';
 import Timestamp = firebase.firestore.Timestamp;
 import { MatDialog, MatDialogConfig } from "@angular/material/dialog";
-import {catchError, tap} from 'rxjs/operators';
+import {catchError, filter, take, tap} from 'rxjs/operators';
 import {throwError} from 'rxjs';
 import { FormGroup } from '@angular/forms';
 import { NgForm } from '@angular/forms';
@@ -47,11 +47,15 @@ export class TemperatureProfileComponent implements OnInit {
     private temperatureService: TemperatureService,
     private userService: UserService,
     private afs: AngularFirestore) {
-      this.reloadProfile()
 }
 
   ngOnInit(): void {
-    this.reloadProfile();
+    this.userService.isActiveUser$.pipe(
+      filter(active => active),
+      take(1)
+    ).subscribe(() => {
+      this.reloadProfile();
+    });
   }
 
   addTemperature() {

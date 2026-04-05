@@ -4,7 +4,7 @@ import { UserService } from "./user.service";
 import { catchError, concatMap, map, switchMap, tap } from "rxjs/operators";
 import { convertSnaps } from "./db-utils";
 import { AllergenicInstanceModel } from '../allergenic/allergenic.model';
-import { from, Observable, Subject, forkJoin, throwError } from 'rxjs';
+import { from, Observable, of, Subject, forkJoin, throwError } from 'rxjs';
 import { AllergenicProductModel } from '../allergenic/allergenic-product.model';
 import Swal from 'sweetalert2';
 import firebase from 'firebase/compat/app';
@@ -41,12 +41,14 @@ export class AllergenicService {
 
   getAllergenicDataByUrid() {
     const urid = this.userService.getUserId();
+    if (!urid) return Promise.resolve(null);
    return this.db.doc("/allergenic-data/"+urid).ref.get()
   }
 
 
 loadAllergenicDataByUrid() {
   const urid = this.userService.getUserId();
+  if (!urid) return of(null);
   return this.db.doc("/allergenic-data/"+urid).valueChanges();
 }
 

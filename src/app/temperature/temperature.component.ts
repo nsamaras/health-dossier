@@ -3,6 +3,7 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatDatepickerInputEvent } from '@angular/material/datepicker';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Observable, Subject, Subscription } from 'rxjs';
+import { filter, take } from 'rxjs/operators';
 import { TemperatureService } from '../services/temperature.service';
 import firebase from 'firebase/compat/app';
 import Timestamp = firebase.firestore.Timestamp;
@@ -86,7 +87,12 @@ export class TemperatureComponent implements OnInit, AfterViewInit {
   }
 
   ngOnInit() {
-    this.getAllTemperatures();
+    this.userService.isActiveUser$.pipe(
+      filter(active => active),
+      take(1)
+    ).subscribe(() => {
+      this.getAllTemperatures();
+    });
   }
 
   ngAfterViewInit() {

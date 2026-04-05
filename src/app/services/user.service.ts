@@ -44,7 +44,7 @@ export class UserService {
 
         afAuth.authState.subscribe(user => {
             if (user) {
-                this.setUser();
+                this.setUser(user);
             } else {
                 this.isActiveUser$.next(false);
                 this.isAdminUser$.next(false);
@@ -68,9 +68,12 @@ export class UserService {
         this.router.navigate(['/auth']);   
     }
 
-    setUser() {   
-        this.afAuth.currentUser
-            .then((userCredential) => {    
+    setUser(firebaseUser?: any) {
+        const getUserPromise = firebaseUser
+            ? Promise.resolve(firebaseUser)
+            : this.afAuth.currentUser;
+        getUserPromise
+            .then((userCredential) => {
         this.getUserByUrid(userCredential.uid)
             .subscribe(result => {      
                 if(result.length == 0) {
@@ -81,13 +84,14 @@ export class UserService {
                         isActive: false,
                         isAdmin: false,
                         phoneNumber: '',
-                        vat: ''
+                        vat: '',
+                        createdAt: new Date().toISOString().split('T')[0]
                     }
                     this.saveUser(newUser)
                         .pipe(
                           tap(() => {
                             Swal.fire(
-                              'Γεία σου νέε χρηστη ' + userCredential.displayName,
+                              'Σας καλωσορίζουμε στην πλατφόρμα μας ' + userCredential.displayName,
                               'success'
                             )
                           }),
@@ -103,10 +107,16 @@ export class UserService {
                       .subscribe();
                  
                 } else {
-                    this.user = new UserModel(result[0].urid, result[0].email, result[0].name, result[0].isActive, result[0].isAdmin, result[0].phoneNumber, result[0].vat);
+                    this.user = new UserModel(result[0].urid, result[0].email, result[0].name, result[0].isActive, result[0].isAdmin, result[0].phoneNumber, result[0].vat, result[0].createdAt, result[0].startContractAt, result[0].endContractAt, result[0].contracts);
                     this.loginMessage = ' Γεία σου ' + result[0].name;
                     this.isActiveUser$.next(result[0].isActive);
                     this.isAdminUser$.next(result[0].isAdmin);
+                    // Backfill createdAt for existing users who don't have it yet
+                    if (!result[0].createdAt) {
+                        const createdAt = new Date().toISOString().split('T')[0];
+                        this.user.createdAt = createdAt;
+                        this.db.collection('users').doc(userCredential.uid).update({ createdAt }).catch(() => {});
+                    }
                 }
                 });
             }
@@ -117,20 +127,20 @@ export class UserService {
         });     
     }
 
-    getUserId() { 
-        if(this.user === undefined) {
-            this.logout()
-        } else if(this.user.isAdmin) {
+
+    getUserId() {
+        if (this.user == null) {
+            return null;
+        } else if (this.user.isAdmin) {
             return this.editUserId;
-        }
-        else {
+        } else {
             return this.user.urid;
         }          
     }
 
     setUserId(userId: string) { 
-        if(this.user === undefined) {
-            this.logout()
+        if (this.user == null) {
+            return null;
         } else {
             return this.user.urid = userId;
         }          
@@ -242,8 +252,20 @@ export class UserService {
     }
 
     getUsers(): Observable<any[]> {
-        return this.db.collection('users', ref => ref.orderBy('email')).valueChanges();
-      }
+        return this.db.collection('users').valueChanges();
+    }
+
+    getUsersPage(pageSize: number, startAfterDoc: any = null): Observable<{ users: UserModel[]; lastDoc: any; total: number }> {
+        let query: any = this.db.firestore.collection('users').limit(pageSize);
+        if (startAfterDoc) query = query.startAfter(startAfterDoc);
+        return from(query.get()).pipe(
+            map((snapshot: any) => ({
+                users: snapshot.docs.map((doc: any) => doc.data() as UserModel),
+                lastDoc: snapshot.docs.length > 0 ? snapshot.docs[snapshot.docs.length - 1] : null,
+                total: snapshot.docs.length
+            }))
+        );
+    }
 
     updateUserFieldsSilent(urid: string, phoneNumber: string, vat: string): Promise<void> {
         return this.db.collection('users').doc(urid).update({ phoneNumber, vat });

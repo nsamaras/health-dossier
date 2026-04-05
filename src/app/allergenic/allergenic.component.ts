@@ -8,7 +8,7 @@ import {SelectionModel} from '@angular/cdk/collections';
 import {MatTableDataSource} from '@angular/material/table';
 import { MatDatepickerInputEvent } from '@angular/material/datepicker';
 import { EventEmitter, Injectable } from '@angular/core';
-import {catchError, filter, map, tap} from 'rxjs/operators';
+import {catchError, filter, map, take, tap} from 'rxjs/operators';
 import { AngularFirestore } from '@angular/fire/compat/firestore';
 import Swal from 'sweetalert2';
 import 'jspdf-autotable';
@@ -64,7 +64,12 @@ constructor(private fb: FormBuilder,
 
 ngOnInit(): void {
   this.allergenicInstance = new AllergenicInstance();
-  this.getAllergenicDataByUrid(); 
+  this.userService.isActiveUser$.pipe(
+    filter(active => active),
+    take(1)
+  ).subscribe(() => {
+    this.getAllergenicDataByUrid();
+  });
 }
 
 mapDocToTypeScriptObject(doc: any): Doc {
@@ -86,6 +91,7 @@ mapDocToTypeScriptObjectDate(doc: any): Doc {
 getAllergenicDataByUrid(){
   this.allergenicService.getAllergenicDataByUrid()
   .then(async (doc: any) => {
+    if (!doc) return;
     const mappedObject = this.mapDocToTypeScriptObject(doc);
     if(mappedObject.data !== undefined) {
       const arrayOfArrays: [string, AllergenicProductEntity][] = Object.entries(mappedObject.data);

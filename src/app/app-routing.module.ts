@@ -15,7 +15,7 @@ import { TemperatureComponent } from "./temperature/temperature.component";
 import { WaterComponent } from "./water/water.component";
 import { AdminDashboardComponent } from "./admin-dashboard/admin-dashboard.component";
 
-const redirectUnathorizedToLogin = () => redirectUnauthorizedTo(['login']);
+const redirectUnathorizedToLogin = () => redirectUnauthorizedTo(['auth']);
 
 const routes: Routes=[
     { path: '', redirectTo: '/home', pathMatch: 'full'},

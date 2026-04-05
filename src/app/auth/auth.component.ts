@@ -59,16 +59,17 @@ export class AuthComponent implements OnInit, OnDestroy {
                         isActive: false,
                         isAdmin: false,
                         phoneNumber,
-                        vat
+                        vat,
+                        createdAt: new Date().toISOString().split('T')[0]
                     };
                     this.userService.saveUser(newUser).subscribe(() => {
-                        this.userService.setUser();
+                        this.userService.setUser(result.user);
                         this.router.navigateByUrl('/home');
                     });
                 });
             } else {
                 const dbUser = users[0];
-                this.userService.setUser();
+                this.userService.setUser(result.user);
 
                 // Existing user — show dialog if phone or vat is missing
                 if (!dbUser.phoneNumber || !dbUser.vat) {
@@ -94,6 +95,7 @@ export class AuthComponent implements OnInit, OnDestroy {
             onSave(profileData?.phoneNumber || '', profileData?.vat || '');
         });
     }
+
 
     updateUserStatus() {
         this.userService.setUser();

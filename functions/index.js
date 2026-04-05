@@ -2,20 +2,18 @@
  * Health Dossier - Firebase Cloud Functions
  *
  * dailyTemperatureFill
- *   Runs every day at 23:00 (Europe/Athens = UTC+2).
- *   For every non-admin (student) user it:
- *     1. Reads their profile lists (FRIDGES-LIST, FREEZERS-LIST)
- *     2. Creates a record for today if one does not exist yet
- *     3. Fills empty temperature fields with integer values matching the UI select options:
- *          Fridges   :  0 – 6 °C   (temperatureMorning + temperatureAfternoon)
- *          Freezers  : -18 – -23 °C (temperatureMorning + temperatureAfternoon)
+ *   Runs every day at 22:00 (Europe/Athens = UTC+2).
+ *   For every user it reads their profile lists and fills empty temperature
+ *   fields with random values matching the UI select options:
+ *     Fridges  :  0 –  6 °C   (temperatureMorning + temperatureAfternoon)
+ *     Freezers : -18 – -25 °C (temperatureMorning + temperatureAfternoon)
+ *     Hots     : 63 –  85 °C  (temperature)
+ *     Cooked   : 70 –  82 °C  (temperature)
  *
  * scheduledFirestoreBackup
  *   Runs every day at 03:00 (Europe/Athens).
  *   Exports the entire Firestore database to Google Cloud Storage bucket:
  *     gs://health-dossier-9c4e24879fde-backups/firestore/YYYY-MM-DD/
- */
- *          Cooked    : 70.0 –  82.0 °C  (temperature)
  */
 
 const { onSchedule }   = require('firebase-functions/v2/scheduler');
@@ -34,6 +32,81 @@ function getTwilioClient() {
   if (!sid || !token) throw new Error('Twilio credentials not configured in .env');
   return twilio(sid, token);
 }
+
+// ─── Delete User ──────────────────────────────────────────────────────────
+exports.deleteUser = onCall({ region: 'us-central1' }, async (request) => {
+  if (!request.auth) throw new HttpsError('unauthenticated', 'Must be logged in.');
+
+  const { urid } = request.data;
+  if (!urid) throw new HttpsError('invalid-argument', 'urid is required.');
+
+  // Only admins can delete users
+  const callerDoc = await db.collection('users').doc(request.auth.uid).get();
+  if (!callerDoc.exists || !callerDoc.data().isAdmin) {
+    throw new HttpsError('permission-denied', 'Only admins can delete users.');
+  }
+
+  // Prevent self-deletion
+  if (request.auth.uid === urid) {
+    throw new HttpsError('failed-precondition', 'Cannot delete your own account.');
+  }
+
+  // 1. Delete from Firebase Authentication
+  try {
+    await admin.auth().deleteUser(urid);
+    logger.info('Auth user deleted: ' + urid);
+  } catch (e) {
+    logger.warn('Could not delete auth user ' + urid + ': ' + e.message);
+  }
+
+  // 2. Recursively delete from all Firestore collections where urid IS the document ID
+  const COLLECTIONS = ['users', 'temperatures', 'cleaning', 'allergenic-data', 'suppliers'];
+  for (const col of COLLECTIONS) {
+    const ref = db.collection(col).doc(urid);
+    try {
+      await db.recursiveDelete(ref);
+      logger.info('Deleted ' + col + '/' + urid);
+    } catch (e) {
+      logger.warn('Could not delete ' + col + '/' + urid + ': ' + e.message);
+    }
+  }
+
+  // 3. Delete from collections where urid is a FIELD VALUE (not document ID)
+  // uploads: /uploads/{docId}  ->  urid field
+  // suppliers sub-documents: /suppliers/{any}/SUPPLIERS/{docId}  ->  urid field
+  const FIELD_COLLECTIONS = [
+    { collection: 'uploads',   isGroup: false },
+    { collection: 'SUPPLIERS', isGroup: true  },
+  ];
+
+  for (const { collection, isGroup } of FIELD_COLLECTIONS) {
+    try {
+      const query = isGroup
+        ? db.collectionGroup(collection).where('urid', '==', urid)
+        : db.collection(collection).where('urid', '==', urid);
+
+      const snapshot = await query.get();
+      if (snapshot.empty) {
+        logger.info('No documents found in ' + collection + ' for urid ' + urid);
+        continue;
+      }
+
+      const BATCH_SIZE = 400;
+      const docs = snapshot.docs;
+      for (let i = 0; i < docs.length; i += BATCH_SIZE) {
+        const batch = db.batch();
+        docs.slice(i, i + BATCH_SIZE).forEach(doc => batch.delete(doc.ref));
+        await batch.commit();
+      }
+      logger.info('Deleted ' + docs.length + ' document(s) from ' + collection + ' for urid ' + urid);
+    } catch (e) {
+      logger.warn('Could not delete from ' + collection + ' (field query) for urid ' + urid + ': ' + e.message);
+    }
+  }
+
+  logger.info('deleteUser complete for urid: ' + urid);
+  return { success: true };
+});
 
 // ─── Send WhatsApp message (text + optional video/image) ─────────────────
 exports.sendWhatsAppToUser = onCall({ region: 'us-central1' }, async (request) => {

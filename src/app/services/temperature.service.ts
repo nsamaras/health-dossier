@@ -1,5 +1,5 @@
 import { EventEmitter, Injectable } from "@angular/core";
-import { forkJoin, from, Observable, Subject } from 'rxjs';
+import { forkJoin, from, Observable, of, Subject } from 'rxjs';
 import { AngularFireDatabase } from "@angular/fire/compat/database";
 import { AuthService } from "../auth/auth.service";
 import { TemperatureModel } from "../temperature/temperature.model";
@@ -25,6 +25,7 @@ export class TemperatureService {
  
   getFridgesByDate(date: Timestamp) {
     var urid = this.userService.getUserId();
+    if (!urid) return of([]);
     return this.db.collection(`temperatures/${urid}/FRIDGES-BY-DATE`,
            ref => ref
            .where("date", "==",date)
@@ -37,6 +38,7 @@ export class TemperatureService {
 
   getFridgesList() {
     var urid = this.userService.getUserId();
+    if (!urid) return of([]);
     return this.db.collection(`temperatures/${urid}/FRIDGES-LIST`,
            ref => ref
            .orderBy("name"))
@@ -112,6 +114,7 @@ export class TemperatureService {
 
   getFreezersList() {
     var urid = this.userService.getUserId();
+    if (!urid) return of([]);
     return this.db.collection(`temperatures/${urid}/FREEZERS-LIST`,
            ref => ref
            .orderBy("name"))
@@ -123,6 +126,7 @@ export class TemperatureService {
 
   getHotsList() {
     var urid = this.userService.getUserId();
+    if (!urid) return of([]);
     return this.db.collection(`temperatures/${urid}/HOTS-LIST`,
            ref => ref
            .orderBy("name"))
@@ -134,6 +138,7 @@ export class TemperatureService {
 
   getCookedList() {
     var urid = this.userService.getUserId();
+    if (!urid) return of([]);
     return this.db.collection(`temperatures/${urid}/COOKED-LIST`,
            ref => ref
            .orderBy("name"))
@@ -146,6 +151,7 @@ export class TemperatureService {
 
   getFreezersByDate(date: Timestamp) {
     var urid = this.userService.getUserId();
+    if (!urid) return of([]);
     return this.db.collection(`temperatures/${urid}/FREEZERS-BY-DATE`,
            ref => ref
            .where("date", "==",date)
@@ -158,6 +164,7 @@ export class TemperatureService {
 
   getHotsByDate(date: Timestamp) {
     var urid = this.userService.getUserId();
+    if (!urid) return of([]);
     return this.db.collection(`temperatures/${urid}/HOTS-BY-DATE`,
            ref => ref
            .where("date", "==",date)
@@ -171,6 +178,7 @@ export class TemperatureService {
 
   getCookedByDate(date: Timestamp) {
     var urid = this.userService.getUserId();
+    if (!urid) return of([]);
     return this.db.collection(`temperatures/${urid}/COOKED-BY-DATE`,
            ref => ref
            .where("date", "==",date)
@@ -184,6 +192,7 @@ export class TemperatureService {
 
   getFridges() {
     var urid = this.userService.getUserId();
+    if (!urid) return of([]);
     return this.db.collection(`temperatures/${urid}/FRIDGES`,
            ref => ref
            .orderBy("name"))
@@ -195,6 +204,7 @@ export class TemperatureService {
   
   getFreezers() {
     var urid = this.userService.getUserId()
+    if (!urid) return of([]);
     return this.db.collection(`temperatures/${urid}/FREEZERS`,
            ref => ref
            .orderBy("name"))
@@ -206,6 +216,7 @@ export class TemperatureService {
 
   getHots() {
     var urid = this.userService.getUserId()
+    if (!urid) return of([]);
     return this.db.collection(`temperatures/${urid}/HOTS`,
            ref => ref
            .orderBy("name"))
@@ -217,6 +228,7 @@ export class TemperatureService {
 
   getCooked() {
     var urid = this.userService.getUserId()
+    if (!urid) return of([]);
     return this.db.collection(`temperatures/${urid}/COOKED`,
            ref => ref
            .orderBy("name"))
@@ -229,6 +241,7 @@ export class TemperatureService {
 
   getTemperaturesByDocIdAndName(docId: string, category: string, name: string) {
     var urid = this.userService.getUserId();
+    if (!urid) return of([]);
     return this.db.collection('temperatures/')
           .doc(`${urid}`)
           .collection(`${category}`,
@@ -323,6 +336,7 @@ export class TemperatureService {
 
   onExportPdf(from: Timestamp, to: Timestamp, category: string) {
     var urid = this.userService.getUserId();
+    if (!urid) return of([]);
     return this.db.collection('temperatures/').doc(`${urid}`).collection(`${category}`,
            ref => ref
            .where("date", ">=", from)

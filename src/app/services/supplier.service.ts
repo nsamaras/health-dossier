@@ -1,6 +1,6 @@
 import { Injectable } from "@angular/core";
 import { AngularFirestore } from "@angular/fire/compat/firestore";
-import { from, Observable, Subject } from "rxjs";
+import { from, Observable, of, Subject } from "rxjs";
 import { map } from "rxjs/operators";
 import Swal from "sweetalert2";
 import { Menu } from "../model/menu";
@@ -70,6 +70,7 @@ import { CriteriaEvaluation } from "../suppliers/supplier-evaluation/criteria-ev
 
   loadSuppliersByUrid() {
     var urid = this.userService.getUserId();
+    if (!urid) return of([]);
     return this.db.collection('suppliers/')
             .doc(`${urid}`)
             .collection('SUPPLIERS',

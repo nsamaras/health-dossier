@@ -1,0 +1,76 @@
+.dialog-title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: #1a66d2;
+}
+
+.dialog-form {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding-top: 8px;
+  min-width: 420px;
+}
+
+.full-width {
+  width: 100%;
+}
+
+.upload-section {
+  margin-top: 12px;
+  padding: 16px;
+  border: 1px dashed #c5d5f0;
+  border-radius: 10px;
+  background: #f8faff;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.upload-label {
+  font-weight: 600;
+  color: #1a66d2;
+  margin: 0;
+  font-size: 14px;
+}
+
+.current-contract {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.contract-icon {
+  color: #1a66d2;
+  font-size: 20px;
+  width: 20px;
+  height: 20px;
+}
+
+.contract-link {
+  font-size: 14px;
+  color: #1a66d2;
+  text-decoration: none;
+}
+.contract-link:hover { text-decoration: underline; }
+
+.no-contract {
+  font-size: 13px;
+  color: #999;
+  margin: 0;
+  font-style: italic;
+}
+
+.progress-bar {
+  margin-top: 4px;
+  border-radius: 4px;
+}
+
+.upload-pct {
+  font-size: 12px;
+  color: #555;
+  margin: 0;
+  text-align: right;
+}
+

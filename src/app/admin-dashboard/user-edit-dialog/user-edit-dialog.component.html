@@ -1,0 +1,70 @@
+<h2 mat-dialog-title class="dialog-title">
+  <mat-icon>person</mat-icon>
+  Στοιχεία χρήστη
+</h2>
+
+<mat-dialog-content>
+  <form [formGroup]="form" class="dialog-form">
+
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Όνομα</mat-label>
+      <mat-icon matPrefix>person</mat-icon>
+      <input matInput formControlName="name" placeholder="Ονοματεπώνυμο">
+      <mat-error *ngIf="form.get('name')?.hasError('required')">Υποχρεωτικό πεδίο</mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Email</mat-label>
+      <mat-icon matPrefix>email</mat-icon>
+      <input matInput formControlName="email" placeholder="email@example.com">
+      <mat-error *ngIf="form.get('email')?.hasError('required')">Υποχρεωτικό πεδίο</mat-error>
+      <mat-error *ngIf="form.get('email')?.hasError('email')">Μη έγκυρο email</mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>ΑΦΜ</mat-label>
+      <mat-icon matPrefix>badge</mat-icon>
+      <input matInput formControlName="vat" placeholder="123456789">
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Τηλέφωνο</mat-label>
+      <mat-icon matPrefix>phone</mat-icon>
+      <input matInput formControlName="phoneNumber" placeholder="6900000000">
+    </mat-form-field>
+
+    <!-- Contract upload -->
+    <div class="upload-section">
+      <p class="upload-label">Συμβόλαιο</p>
+
+      <!-- Current contract -->
+      <div *ngIf="contractUrl" class="current-contract">
+        <mat-icon class="contract-icon">description</mat-icon>
+        <a [href]="contractUrl" target="_blank" class="contract-link">Προβολή τρέχοντος συμβολαίου ⬇️</a>
+      </div>
+      <p *ngIf="!contractUrl" class="no-contract">Δεν έχει ανέβει συμβόλαιο ακόμα.</p>
+
+      <!-- Upload button -->
+      <button mat-stroked-button color="primary" type="button" (click)="fileInput.click()" [disabled]="uploading">
+        <mat-icon>upload_file</mat-icon>
+        {{ uploading ? 'Μεταφόρτωση…' : 'Ανέβασμα συμβολαίου' }}
+      </button>
+      <input #fileInput type="file" hidden (change)="onFileSelected($event)"
+             accept=".pdf,.doc,.docx,.png,.jpg,.jpeg">
+
+      <!-- Progress bar -->
+      <mat-progress-bar *ngIf="uploading" mode="determinate" [value]="uploadProgress" class="progress-bar">
+      </mat-progress-bar>
+      <p *ngIf="uploading" class="upload-pct">{{ uploadProgress }}%</p>
+    </div>
+
+  </form>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button (click)="cancel()">Ακύρωση</button>
+  <button mat-raised-button color="primary" (click)="save()" [disabled]="form.invalid || uploading">
+    <mat-icon>save</mat-icon> Αποθήκευση
+  </button>
+</mat-dialog-actions>
+

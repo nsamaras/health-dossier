@@ -10,7 +10,12 @@ export class UserModel {
     public isAdmin: boolean;
     public phoneNumber: string;
     public vat: string;
-    constructor(urid: string, email: string, name: string, isActive?: boolean, isAdmin?: boolean, phoneNumber?: string, vat?: string) {
+    public createdAt?: string;
+    public startContractAt?: string;
+    public endContractAt?: string;
+    public contracts?: string;
+
+    constructor(urid: string, email: string, name: string, isActive?: boolean, isAdmin?: boolean, phoneNumber?: string, vat?: string, createdAt?: string, startContractAt?: string, endContractAt?: string, contracts?: string) {
         this.urid = urid;
         this.email = email;
         this.name = name;
@@ -18,5 +23,9 @@ export class UserModel {
         this.isAdmin = isAdmin;
         this.phoneNumber = phoneNumber || '';
         this.vat = vat || '';
+        this.createdAt = createdAt || '';
+        this.startContractAt = startContractAt || '';
+        this.endContractAt = endContractAt || '';
+        this.contracts = contracts || '';
     }
 }

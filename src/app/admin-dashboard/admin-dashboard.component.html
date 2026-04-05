@@ -1,29 +1,139 @@
 <div class="page-container">
+
   <div class="page-hero">
     <mat-icon class="hero-icon">admin_panel_settings</mat-icon>
     <h1 class="hero-title">Admin Dashboard</h1>
   </div>
 
-  <div class="user-dropdown">
-    <label for="users">Select User:</label>
-    <select id="users" (change)="onUserSelect($event)">
-        <option value="" disabled selected>Select a user</option>
-      <option *ngFor="let user of users" [value]="user.urid">
-        {{ user.email }}
-      </option>
-    </select>
+  <!-- Stats -->
+  <div class="stats-row">
+    <div class="stat-card">
+      <mat-icon class="stat-icon total">group</mat-icon>
+      <div class="stat-body">
+        <span class="stat-value">{{ totalUsers }}</span>
+        <span class="stat-label">Σύνολο χρηστών</span>
+      </div>
+    </div>
+    <div class="stat-card">
+      <mat-icon class="stat-icon active">check_circle</mat-icon>
+      <div class="stat-body">
+        <span class="stat-value">{{ activeUsers }}</span>
+        <span class="stat-label">Ενεργοί χρήστες</span>
+      </div>
+    </div>
+    <div class="stat-card">
+      <mat-icon class="stat-icon inactive">cancel</mat-icon>
+      <div class="stat-body">
+        <span class="stat-value">{{ totalUsers - activeUsers }}</span>
+        <span class="stat-label">Ανενεργοί χρήστες</span>
+      </div>
+    </div>
   </div>
 
-  <div  class="user-details">
-    <h3>Selected User Details</h3>
-    <p><strong>Name: </strong> {{ selectedUser.name }}</p>
-    <p><strong>Email: </strong> {{ selectedUser.email }}</p>
-    <p><strong>Ανανέωση active status: </strong>
-    <select id="yesNoDropdown" [(ngModel)]="updatedStatus">
-      <option  [value]="true">Yes</option>
-      <option [value]="false">No</option>
-    </select>
-  </p>
-  <button mat-raised-button color="primary" (click)="submitValue()">Submit</button> 
+  <!-- Filter -->
+  <mat-form-field appearance="outline" class="filter-field">
+    <mat-label>Αναζήτηση χρήστη</mat-label>
+    <input matInput (keyup)="applyFilter($event)" placeholder="Όνομα, email…">
+    <mat-icon matSuffix>search</mat-icon>
+  </mat-form-field>
+
+  <div class="table-wrapper mat-elevation-z2">
+    <table mat-table [dataSource]="dataSource" matSort class="users-table">
+
+      <!-- Name -->
+      <ng-container matColumnDef="name">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Όνομα</th>
+        <td mat-cell *matCellDef="let user">{{ user.name }}</td>
+      </ng-container>
+
+      <!-- Email -->
+      <ng-container matColumnDef="email">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Email</th>
+        <td mat-cell *matCellDef="let user">{{ user.email }}</td>
+      </ng-container>
+
+      <!-- Phone -->
+      <ng-container matColumnDef="phoneNumber">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Τηλέφωνο</th>
+        <td mat-cell *matCellDef="let user">{{ user.phoneNumber || '—' }}</td>
+      </ng-container>
+
+      <!-- VAT -->
+      <ng-container matColumnDef="vat">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>ΑΦΜ</th>
+        <td mat-cell *matCellDef="let user">{{ user.vat || '—' }}</td>
+      </ng-container>
+
+      <!-- Created At -->
+      <ng-container matColumnDef="createdAt">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Ημ/νία Εγγραφής</th>
+        <td mat-cell *matCellDef="let user">{{ formatDate(user.createdAt) }}</td>
+      </ng-container>
+
+      <!-- Start Contract -->
+      <ng-container matColumnDef="startContractAt">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Έναρξη Συμβολαίου</th>
+        <td mat-cell *matCellDef="let user">{{ formatDate(user.startContractAt) }}</td>
+      </ng-container>
+
+      <!-- End Contract -->
+      <ng-container matColumnDef="endContractAt">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Λήξη Συμβολαίου</th>
+        <td mat-cell *matCellDef="let user">{{ formatDate(user.endContractAt) }}</td>
+      </ng-container>
+
+
+      <!-- isActive toggle -->
+      <ng-container matColumnDef="isActive">
+        <th mat-header-cell *matHeaderCellDef>Ενεργός</th>
+        <td mat-cell *matCellDef="let user" (click)="$event.stopPropagation()">
+          <mat-slide-toggle [(ngModel)]="user.isActive" color="primary"></mat-slide-toggle>
+        </td>
+      </ng-container>
+
+      <!-- isAdmin toggle -->
+      <ng-container matColumnDef="isAdmin">
+        <th mat-header-cell *matHeaderCellDef>Admin</th>
+        <td mat-cell *matCellDef="let user" (click)="$event.stopPropagation()">
+          <mat-slide-toggle [(ngModel)]="user.isAdmin" color="accent"></mat-slide-toggle>
+        </td>
+      </ng-container>
+
+      <!-- Actions -->
+      <ng-container matColumnDef="actions">
+        <th mat-header-cell *matHeaderCellDef>Αποθήκευση</th>
+        <td mat-cell *matCellDef="let user">
+          <button mat-icon-button color="primary" (click)="saveUser(user, $event)" matTooltip="Αποθήκευση">
+            <mat-icon>save</mat-icon>
+          </button>
+        </td>
+      </ng-container>
+
+      <!-- Delete -->
+      <ng-container matColumnDef="delete">
+        <th mat-header-cell *matHeaderCellDef>Διαγραφή</th>
+        <td mat-cell *matCellDef="let user">
+          <button mat-icon-button color="warn" (click)="deleteUser(user, $event)" matTooltip="Διαγραφή χρήστη">
+            <mat-icon>delete</mat-icon>
+          </button>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"
+          class="clickable-row"
+          (click)="openEditDialog(row)"></tr>
+
+      <!-- No-data row -->
+      <tr class="mat-row" *matNoDataRow>
+        <td class="mat-cell no-data-cell" [attr.colspan]="displayedColumns.length">
+          Δεν βρέθηκαν χρήστες
+        </td>
+      </tr>
+    </table>
+
+    <!-- Paginator -->
+    <mat-paginator [pageSizeOptions]="[5, 10, 25, 50]" showFirstLastButtons></mat-paginator>
   </div>
+
 </div>
