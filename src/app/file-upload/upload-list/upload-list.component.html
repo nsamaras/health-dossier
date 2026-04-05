@@ -1,5 +1,5 @@
-<br>
-<table mat-table [dataSource]="dataSource" class="mat-elevation-z8" >
+<div class="table-wrapper mat-elevation-z2">
+<table mat-table [dataSource]="dataSource" class="users-table mat-elevation-z8" >
 
   <ng-container matColumnDef="position">
     <th mat-header-cell *matHeaderCellDef> No </th>
@@ -42,6 +42,7 @@
 </table>
 
 <mat-paginator [pageSize]="5"
-               [pageSizeOptions]="[5, 10, 20]"
+               [pageSizeOptions]="[5, 10, 25, 50]"
                showFirstLastButtons>
 </mat-paginator>
+</div>

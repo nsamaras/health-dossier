@@ -1,8 +1,12 @@
-table {
+.table-wrapper {
+  border-radius: 12px;
   width: 100%;
-  border-radius: 8px;
   overflow: hidden;
-  margin-top: 16px;
+  margin-top: 12px;
+}
+
+.users-table {
+  width: 100%;
 }
 
 th.mat-header-cell {
@@ -11,6 +15,7 @@ th.mat-header-cell {
   font-weight: 600;
   padding: 12px 16px;
   text-align: center;
+  white-space: nowrap;
 }
 
 td.mat-cell {
@@ -30,8 +35,9 @@ tr.mat-row:hover {
   box-shadow: 0 2px 12px rgba(0,0,0,0.08) !important;
 }
 
-::ng-deep .mat-paginator-page-size {
-  display: none !important;
+mat-paginator {
+  margin-top: 8px;
+  border-radius: 0 0 12px 12px;
 }
 
 .delete-icon {
@@ -44,3 +50,22 @@ tr.mat-row:hover {
 .delete-icon:hover {
   color: #b71c1c;
 }
+
+@media (max-width: 768px) {
+  .table-wrapper {
+    overflow-x: auto;
+  }
+
+  .users-table {
+    width: max-content;
+    min-width: 560px;
+  }
+
+  th.mat-header-cell,
+  td.mat-cell {
+    padding: 8px 10px;
+    font-size: 12px;
+    white-space: nowrap;
+  }
+}
+
