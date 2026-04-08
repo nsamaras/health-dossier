@@ -26,7 +26,8 @@ export class UserService {
     loginMessage = '';
     user: UserModel;
     userData: any;
-    editUserId: string;
+    editUserId: string | null;
+    selectedAdminUser$ = new BehaviorSubject<{ urid: string; name: string } | null>(null);
 
     isActiveUser$ = new BehaviorSubject<boolean>(false);
     isAdminUser$ = new BehaviorSubject<boolean>(false);
@@ -49,6 +50,8 @@ export class UserService {
                 this.isActiveUser$.next(false);
                 this.isAdminUser$.next(false);
                 this.loginMessage = '';
+                this.selectedAdminUser$.next(null);
+                this.editUserId = null;
             }
         });
     }
@@ -65,7 +68,9 @@ export class UserService {
 
     logout() {
         this.afAuth.signOut();
-        this.router.navigate(['/auth']);   
+        this.selectedAdminUser$.next(null);
+        this.editUserId = null;
+        this.router.navigate(['/auth']);
     }
 
     setUser(firebaseUser?: any) {
@@ -150,7 +155,13 @@ export class UserService {
         this.editUserId = userId;
     }
 
-    loadUserRole(uid: string) : Observable <UserModel[]>{  
+    setSelectedAdminUser(user: Pick<UserModel, 'urid' | 'name'>) {
+        if (!user?.urid) return;
+        this.editUserId = user.urid;
+        this.selectedAdminUser$.next({ urid: user.urid, name: user.name || '' });
+    }
+
+    loadUserRole(uid: string) : Observable <UserModel[]>{
          return this.db.collection("users",
                      ref => ref
                      .where("uid", "==", uid))

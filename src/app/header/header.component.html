@@ -78,6 +78,17 @@
         </button>
       </ng-container>
     </div>
+
+    <div class="selected-user-banner"
+         *ngIf="(user.isLoggedIn$ | async) && (user.isActiveUser$ | async) && (user.isAdminUser$ | async)">
+      <mat-icon>badge</mat-icon>
+      <span *ngIf="user.selectedAdminUser$ | async as selectedUser; else noSelectedUser">
+        Επιλεγμένος χρήστης: <strong>{{ selectedUser.name || selectedUser.urid }}</strong>
+      </span>
+      <ng-template #noSelectedUser>
+        <span>Δεν έχει επιλεγεί χρήστης από το Admin Dashboard.</span>
+      </ng-template>
+    </div>
   </mat-toolbar>
   <router-outlet></router-outlet>
 </mat-sidenav-container>

@@ -57,6 +57,7 @@ export class AdminDashboardComponent implements OnInit, AfterViewInit {
 
   saveUser(user: UserModel, event: Event): void {
     event.stopPropagation();
+    this.userService.setSelectedAdminUser(user);
     const today = new Date().toISOString().split('T')[0];
     const wasActive = this.originalActiveState.get(user.urid);
 
@@ -104,6 +105,8 @@ export class AdminDashboardComponent implements OnInit, AfterViewInit {
 
 
   openEditDialog(user: UserModel): void {
+    this.userService.setSelectedAdminUser(user);
+
     const ref = this.dialog.open(UserEditDialogComponent, {
       width: '500px',
       disableClose: false,
