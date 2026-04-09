@@ -159,6 +159,25 @@ mat-paginator {
   pointer-events: none;
 }
 
+/* ================= STATUS LABELS ================= */
+
+.status-text {
+  margin-left: 6px;
+  font-weight: 600;
+}
+
+.status-icon {
+  vertical-align: middle;
+}
+
+.status-yes {
+  color: #1b5e20;
+}
+
+.status-no {
+  color: #c62828;
+}
+
 /* ================= MOBILE FIX ================= */
 
 @media (max-width: 768px) {

@@ -6,6 +6,11 @@
 <mat-dialog-content>
   <form [formGroup]="form" class="dialog-form">
 
+    <div class="status-edit">
+      <mat-slide-toggle formControlName="isActive" color="primary">Ενεργός</mat-slide-toggle>
+      <mat-slide-toggle formControlName="isAdmin" color="accent">Admin</mat-slide-toggle>
+    </div>
+
     <mat-form-field appearance="outline" class="full-width">
       <mat-label>Όνομα</mat-label>
       <mat-icon matPrefix>person</mat-icon>

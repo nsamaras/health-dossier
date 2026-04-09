@@ -16,7 +16,7 @@ import Swal from 'sweetalert2';
 })
 export class AdminDashboardComponent implements OnInit, AfterViewInit {
 
-  displayedColumns: string[] = ['name', 'email', 'phoneNumber', 'vat', 'createdAt', 'startContractAt', 'endContractAt', 'isActive', 'isAdmin', 'actions', 'delete'];
+  displayedColumns: string[] = ['name', 'email', 'phoneNumber', 'vat', 'createdAt', 'startContractAt', 'endContractAt', 'isActive', 'isAdmin'];
   dataSource = new MatTableDataSource<UserModel>([]);
 
   totalUsers  = 0;

@@ -28,7 +28,9 @@ export class UserEditDialogComponent {
       name:        [data.name        || '', Validators.required],
       email:       [data.email       || '', [Validators.required, Validators.email]],
       vat:         [data.vat         || ''],
-      phoneNumber: [data.phoneNumber || '']
+      phoneNumber: [data.phoneNumber || ''],
+      isActive:    [!!data.isActive],
+      isAdmin:     [!!data.isAdmin]
     });
   }
 
@@ -70,4 +72,3 @@ export class UserEditDialogComponent {
     this.dialogRef.close(null);
   }
 }
-
