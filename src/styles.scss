@@ -94,6 +94,11 @@ html, body {
   -webkit-font-smoothing: antialiased;
 }
 
+app-root {
+  display: block;
+  height: 100%;
+}
+
 a {
   color: #1a66d2;
 }
@@ -135,6 +140,3 @@ mat-card {
   margin: 0;
   line-height: 1.4;
 }
-
-
-
