@@ -1,7 +1,32 @@
+# Health Dossier
+
+A comprehensive health and safety management application built with Angular and Firebase.
+
+## 📱 Now Available as Android App!
+
+This project has been configured for deployment to the **Google Play Store** using Capacitor.
+
+### Quick Start for Android
+
+```bash
+# Build for Android
+npm run build:android
+
+# Open in Android Studio
+npm run open:android
+```
+
+📖 **See detailed Android documentation:**
+- **[ANDROID_README.md](ANDROID_README.md)** - Quick start guide
+- **[ANDROID_BUILD_GUIDE.md](ANDROID_BUILD_GUIDE.md)** - Complete build and release guide
+- **[PLAY_STORE_CHECKLIST.md](PLAY_STORE_CHECKLIST.md)** - Pre-submission checklist
+- **[FIREBASE_ANDROID_SETUP.md](FIREBASE_ANDROID_SETUP.md)** - Firebase configuration
+
+---
 
 ## Firebase & AngularFire In Depth 
 
-This repository currently contains the code for the [Firebase & AngularFire In Depth](https://angular-university.io/course/angularfire-course).
+This repository is based on the [Firebase & AngularFire In Depth](https://angular-university.io/course/angularfire-course) course.
 
 This course is updated to Angular 13:
 

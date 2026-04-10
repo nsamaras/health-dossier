@@ -12,7 +12,10 @@
     "local-dev": "firebase emulators:start --only firestore,auth,functions --import test-data",
     "empty-emulator": "firebase emulators:start",
     "emulator": "firebase emulators:start --import test-data",
-    "export": "firebase emulators:export test-data"
+    "export": "firebase emulators:export test-data",
+    "build:android": "ng build --configuration production && npx cap sync android",
+    "open:android": "npx cap open android",
+    "sync:android": "npx cap sync android"
   },
   "private": true,
   "dependencies": {
@@ -27,6 +30,9 @@
     "@angular/platform-browser": "~13.3.0",
     "@angular/platform-browser-dynamic": "~13.3.0",
     "@angular/router": "~13.3.0",
+    "@capacitor/android": "^8.3.0",
+    "@capacitor/cli": "^8.3.0",
+    "@capacitor/core": "^8.3.0",
     "faker": "^6.6.6",
     "firebase": "^9.23.0",
     "firebaseui": "^6.0.2",
