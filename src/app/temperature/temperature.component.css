@@ -1,10 +1,12 @@
 .example-form-field {
-  width: 200px;
+  width: 100%;
+  max-width: 200px;
+  min-width: 120px;
 }
 
 .courses-panel {
   max-width: 1100px;
-  margin: 20px auto 40px auto;
+  margin: 20px auto 0 auto;
   text-align: center;
 }
 
@@ -27,7 +29,6 @@ table {
 
 .fridge-table {
   width: 100%;
-  min-width: 700px;
   border-radius: 8px;
   overflow: hidden;
   margin-top: 16px;
@@ -35,8 +36,7 @@ table {
 
 .table-scroll {
   width: 100%;
-  overflow-x: auto;
-  display: block;
+  overflow-x: hidden;
   margin-top: 16px;
   border-radius: 8px;
   box-shadow: 0 2px 4px rgba(0,0,0,0.1);
@@ -46,11 +46,38 @@ table {
   background-color: #1a66d2;
   color: white;
   font-weight: 600;
-  padding: 12px 16px;
+  padding: 12px 8px;
+  word-wrap: break-word;
 }
 
 .fridge-table td.mat-cell {
-  padding: 10px 16px;
+  padding: 10px 8px;
+}
+
+.fridge-table .mat-column-name {
+  flex: 0 0 25%;
+  min-width: 150px;
+}
+
+.fridge-table .mat-column-temperatureMorning {
+  flex: 0 0 30%;
+  min-width: 180px;
+}
+
+.fridge-table .mat-column-temperatureAfternoon {
+  flex: 0 0 30%;
+  min-width: 180px;
+}
+
+.fridge-table .mat-column-temperature {
+  flex: 0 0 35%;
+  min-width: 180px;
+}
+
+.fridge-table .mat-column-delete {
+  flex: 0 0 15%;
+  min-width: 80px;
+  max-width: 100px;
 }
 
 .fridge-table tr.mat-row:nth-child(even) {
@@ -141,18 +168,63 @@ mat-form-field {
 
 .action-row {
   margin-top: 16px;
-  margin-bottom: 40px;
+  margin-bottom: 16px;
   display: flex;
   justify-content: flex-end;
 }
 
 ::ng-deep .mat-tab-body-content {
-  overflow: auto !important;
-  padding-bottom: 80px;
+  overflow: hidden !important;
 }
 
-::ng-deep .mat-tab-body-wrapper {
-  height: auto !important;
-  flex: 1 1 auto !important;
+/* Responsive styles for smaller screens */
+@media screen and (max-width: 768px) {
+  .fridge-table .mat-column-name {
+    min-width: 120px;
+  }
+
+  .fridge-table .mat-column-temperatureMorning,
+  .fridge-table .mat-column-temperatureAfternoon,
+  .fridge-table .mat-column-temperature {
+    min-width: 140px;
+  }
+
+  .fridge-table th.mat-header-cell,
+  .fridge-table td.mat-cell {
+    padding: 8px 4px;
+    font-size: 14px;
+  }
+
+  .example-form-field {
+    min-width: 100px;
+    max-width: 180px;
+  }
+
+  .courses-panel {
+    max-width: 100%;
+    padding: 0 10px;
+  }
 }
 
+@media screen and (max-width: 480px) {
+  .fridge-table .mat-column-name {
+    min-width: 100px;
+  }
+
+  .fridge-table .mat-column-temperatureMorning,
+  .fridge-table .mat-column-temperatureAfternoon,
+  .fridge-table .mat-column-temperature {
+    min-width: 120px;
+  }
+
+  .fridge-table th.mat-header-cell,
+  .fridge-table td.mat-cell {
+    padding: 6px 2px;
+    font-size: 12px;
+  }
+
+  .example-form-field {
+    min-width: 80px;
+    max-width: 150px;
+  }
+}
