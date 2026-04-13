@@ -7,6 +7,7 @@ import { AngularFireStorage } from '@angular/fire/compat/storage';
 import { from, Observable, Subject, throwError } from 'rxjs';
 import { catchError, finalize, map, tap } from 'rxjs/operators';
 import { FileUpload } from '../file-upload/file-upload';
+import { forkJoin } from 'rxjs';
 
 import 'firebase/firestore';
 import { AngularFireAuth } from '@angular/fire/compat/auth';
@@ -126,6 +127,50 @@ export class FileUploadService {
              this.filesChanged.next(fileUploads.slice());
           });
  }
+
+getDefaultFilesByCategory(category: string, seqNo: number) {
+    this.db.collection('default-files',
+           ref => ref.where("category", "==", category)
+           .where("seqNo", "==", seqNo)
+           .orderBy("name"))
+           .get()
+           .pipe(
+             map(result => convertSnaps<FileUpload>(result))
+           )
+           .subscribe(fileUploads => {
+             this.files = fileUploads;
+             this.filesChanged.next(fileUploads.slice());
+          });
+ }
+
+getDefaultAndCategoryFiles(category: string, seqNo: number) {
+  const uploads$ = this.db.collection('uploads',
+    ref => ref.where("category", "==", category)
+      .where("subCategory", "==", this.subCategory)
+      .where("urid", "==", this.userService.getUserId())
+      .orderBy("name"))
+    .get()
+    .pipe(
+      map(result => convertSnaps<FileUpload>(result))
+    );
+
+  const defaultFiles$ = this.db.collection('default-files',
+    ref => ref.where("category", "==", category)
+      .where("seqNo", "==", seqNo)
+      .orderBy("name"))
+    .get()
+    .pipe(
+      map(result => convertSnaps<FileUpload>(result))
+    );
+
+  forkJoin([uploads$, defaultFiles$])
+    .subscribe(([userFiles, defaultFiles]) => {
+      const combined = [...userFiles, ...defaultFiles];
+
+      this.files = combined;
+      this.filesChanged.next(combined.slice());
+    });
+}
 
  getSuppliersFiles(category: string) {
   this.db.collection('uploads',

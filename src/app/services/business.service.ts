@@ -61,15 +61,4 @@ export class BusinessService {
                     map(result => convertSnaps<BusinessFile>(result))
                 );
     }
-  
-    loadCoursesByCategory(category: string): Observable <BusinessFile[]> {
-        return this.db.collection("menu",
-                     ref => ref.where("category", "==", category) 
-                     .orderBy("seqNo"))
-                     .get()
-                     .pipe(
-                         map(result => convertSnaps<BusinessFile>(result))
-                     );
-        
-    }
 }

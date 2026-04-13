@@ -45,18 +45,14 @@ export class BusinessFilesComponent implements OnInit {
   fetchBusinessFiles() {
         this.service.loadByCategory('business-files').subscribe(headers => {              
             this.service.loadHeadersByMenuId(headers[0].id).subscribe(menu => {
-            this.menu = [
-              ...menu,
-              new BusinessFile('Συμβαση ανακύκλωσης ελαίων', ''),
-              new BusinessFile('Βεβαιωση καλης λειτουργίας απαγωγικού', '')
-            ];
+            this.menu = menu;
             });
         });
     }
 
     public tabChanged(tabChangeEvent: MatTabChangeEvent): void {
         this.fileUploadService.setMenuCategoryAndSubCategory(tabChangeEvent.index, 'business-files');
-        this.fileUploadService.getFilesByCategory('business-files'); 
+        this.fileUploadService.getDefaultAndCategoryFiles('business-files', tabChangeEvent.index);
     }
 
     removeId(data: any) {
