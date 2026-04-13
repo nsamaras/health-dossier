@@ -52,7 +52,7 @@ export class SupplierFilesComponent implements OnInit {
       this.selectedTabIndex = tabChangeEvent.index;
       if (tabChangeEvent.index === 2) {
         this.fileUploadService.setMenuCategoryAndSubCategory(tabChangeEvent.index, 'supplier-files');
-        this.fileUploadService.getFilesByCategory('supplier-files');
+        this.fileUploadService.getDefaultAndCategoryFiles('supplier-files', tabChangeEvent.index);
       }
   }
 
