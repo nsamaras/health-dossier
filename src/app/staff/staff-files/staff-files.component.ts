@@ -47,7 +47,7 @@ export class StaffFilesComponent implements OnInit {
     const title = this.menu[tabChangeEvent.index]?.title || '';
     this.service.selectedTabTitle$.next(title);
     this.fileUploadService.setMenuCategoryAndSubCategory(tabChangeEvent.index, 'staff-files');
-    this.fileUploadService.getFilesByCategory('staff-files');
+    this.fileUploadService.getDefaultAndCategoryFiles('staff-files', tabChangeEvent.index);
   }
 
   openUploadDialog(): void {
