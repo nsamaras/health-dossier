@@ -71,4 +71,4 @@ capacitor.config.json
 
 # iOS (if adding later)
 ios/
-App/
+#App/
