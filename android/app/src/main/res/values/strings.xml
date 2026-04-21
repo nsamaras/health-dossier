@@ -1,7 +1,0 @@
-<?xml version='1.0' encoding='utf-8'?>
-<resources>
-    <string name="app_name">Health Dossier</string>
-    <string name="title_activity_main">Health Dossier</string>
-    <string name="package_name">com.healthdossier.app</string>
-    <string name="custom_url_scheme">com.healthdossier.app</string>
-</resources>
