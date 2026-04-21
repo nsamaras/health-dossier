@@ -10,8 +10,10 @@
     </mat-card-content>
   </mat-card>
 
-  <mat-card class="content-card">
-    <mat-card-content>
+  <mat-tab-group (selectedTabChange)="tabChanged($event)" mat-align-tabs="center">
+    <mat-tab label="Αλλεργιογόνα">
+      <mat-card class="content-card">
+        <mat-card-content>
 
       <div class="toolbar-row">
         <mat-form-field appearance="outline" class="product-input">
@@ -89,7 +91,23 @@
         </mat-expansion-panel>
       </mat-accordion>
 
-    </mat-card-content>
-  </mat-card>
+        </mat-card-content>
+      </mat-card>
+    </mat-tab>
+
+    <mat-tab label="Αρχεία">
+      <mat-card class="content-card">
+        <mat-card-content>
+          <div>
+            <app-upload-form></app-upload-form>
+          </div>
+
+          <div>
+            <app-upload-list></app-upload-list>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </mat-tab>
+  </mat-tab-group>
 </div>
 

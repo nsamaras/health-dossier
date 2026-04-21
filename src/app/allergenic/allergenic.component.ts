@@ -16,6 +16,7 @@ import autoTable from 'jspdf-autotable'
 import jsPDF from 'jspdf';
 import { ExportService } from '../services/export.service';
 import { AllergenicService } from '../services/allergenic.service';
+import { FileUploadService } from '../services/file-upload.service';
 import { AllergenicInstanceModel } from './allergenic.model';
 import { AllergenicProductModel } from './allergenic-product.model';
 import {MatAccordion, MatExpansionModule} from '@angular/material/expansion';
@@ -24,6 +25,7 @@ import {MatInputModule} from '@angular/material/input';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatIconModule} from '@angular/material/icon';
 import {MatButtonModule} from '@angular/material/button';
+import { MatTabChangeEvent } from '@angular/material/tabs';
 import { AllergenicInstance } from './allergenic-instance';
 import { AllergenicInstanceInfo } from './allergenic-instance-info';
 import { AllergenicEntity } from './allergenic-entity';
@@ -59,7 +61,8 @@ constructor(private fb: FormBuilder,
     private router: Router,
     private allergenicService: AllergenicService,
     private userService: UserService,
-    private exportService: ExportService) {
+    private exportService: ExportService,
+    private fileUploadService: FileUploadService) {
 }
 
 ngOnInit(): void {
@@ -246,6 +249,14 @@ onCheckboxChange(selectedItem: any, type: string): void {
 
 export() {
   this.exportService.exportAllergenic();
+}
+
+public tabChanged(tabChangeEvent: MatTabChangeEvent): void {
+  if (tabChangeEvent.index === 1) {
+    // Files tab
+    this.fileUploadService.setMenuCategoryAndSubCategory(0, 'allergenic-files');
+    this.fileUploadService.getDefaultAndCategoryFiles('allergenic-files', 0);
+  }
 }
 
 isAllContainsSelected(): boolean {
