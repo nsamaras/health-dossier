@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "315638128873",
+    "firebase_url": "https://health-dossier-default-rtdb.firebaseio.com",
+    "project_id": "health-dossier",
+    "storage_bucket": "health-dossier.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:315638128873:android:df0aeac3c3c6d25bcd5078",
+        "android_client_info": {
+          "package_name": "com.healthdossier.app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "315638128873-oqj87u1skr1mo64ihnpan1u6lju0ibtj.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCVTFJYDUmaxRS7ByydgKs0k5S-O6HW5q4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "315638128873-oqj87u1skr1mo64ihnpan1u6lju0ibtj.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
