@@ -255,7 +255,7 @@ public tabChanged(tabChangeEvent: MatTabChangeEvent): void {
   if (tabChangeEvent.index === 1) {
     // Files tab
     this.fileUploadService.setMenuCategoryAndSubCategory(0, 'allergenic-files');
-    this.fileUploadService.getDefaultAndCategoryFiles('allergenic-files', 0);
+    this.fileUploadService.getDefaultAndCategoryFiles('allergenic-files', 1);
   }
 }
 
